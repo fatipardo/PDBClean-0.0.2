@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: PDBClean
+Version: 0.0.1
+Summary: PDB curation tools
+Home-page: https://github.com/csblab/PDBClean
+Download-URL: https://github.com/csblab/PDBClean
+Author: Levitt Lab, Stanford
+Author-email: fpoitevi@stanford.edu
+License: MIT
+Platform: Linux
+Platform: OSX
+
+PDBClean offers curation tools for structural ensemble deposited in the Protein Data Bank.
