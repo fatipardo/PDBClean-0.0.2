@@ -1,6 +1,7 @@
 import os, glob
 import re
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
+
 #
 def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', pdbformat='.cif', verbose=True):
     """
@@ -20,7 +21,7 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
             if(step=='clean'):
                 if os.path.isfile(output_cif):
                     os.remove(output_cif)
-                clean_cif(input_cif, output_cif)
+                clean_cif(input_cif, output_cif) #FAPA, CLOSE )
             elif(step=='simplify'):
                 # missing line: remove all assembly cif already created
                 simplify_cif(input_cif, output_cif, pdbformat)
@@ -88,6 +89,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
     # to list type
     asym_assembly_map = {}
     assembly_id = mmcif_dict['_pdbx_struct_assembly_gen.assembly_id']
+
     if not isinstance(assembly_id, list):
         assembly_id_list = []
         asym_id_list = []
@@ -105,22 +107,9 @@ def simplify_cif(oldfile, newfile, pdbformat):
         asym_id = asym_id.split(',')
         for ident in asym_id:
             asym_assembly_map[ident] = assembly_id_list[i]
-    #
-    # Create entity_id -> [asym_id] correspondence map.
-    # This is needed in order to determine whether or not a chain's molID info
-    # should be printed to the file
-    entity_id_list = mmcif_dict['_atom_site.label_entity_id']
-    asym_id_list = mmcif_dict['_atom_site.label_asym_id']
 
-    entity_asym_assembly_map = {}
-    for i in range(len(entity_id_list)):
-        if entity_id_list[i] in entity_asym_assembly_map:
-            if asym_id_list[i] not in entity_asym_assembly_map[entity_id_list[i]]:
-                entity_asym_assembly_map[entity_id_list[i]].append(asym_id_list[i])
-        else:
-            entity_asym_assembly_map[entity_id_list[i]] = [asym_id_list[i]]
-    # Start writing to file for each biological assembly unit (different structure)
     for assembly in assembly_id_list:
+
         if (len(assembly_id_list)==1):
             newciffilename = str(re.sub(pdbformat, '', newfile))+"+00"
         else:
@@ -129,7 +118,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
         newciffile.write("data_"+newciffilename+"\n")
         #Write entry.id
         newciffile.write("#\n")
-        L = str(mmcif_dict['_entry.id']) # Change to STR because the default was a list
+        L = str(mmcif_dict['_entry.id']) # FAPA: Change to STR because the default was a list
         entryid = '_entry.id   ' + L
         newciffile.write(entryid + "\n")
         # Write Audit category
@@ -183,28 +172,18 @@ def simplify_cif(oldfile, newfile, pdbformat):
         else:
             newciffile.write("'" + L1 + "' " + L2 + " " + "\n")
         # Write Entity category
-        # Note: Special check included to make sure molID pertains to chain in assembly
+        # This was the part fixed by FAPA
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
         newciffile.write("_entity.id" + "\n")
         newciffile.write("_entity.pdbx_description" + "\n")
         L1 = mmcif_dict['_entity.id']
         L2 = mmcif_dict['_entity.pdbx_description']
-        if isinstance(L1, list):  # Have to check list or not because files with only one assembly unit won't be list
-            for i in range(len(L1)):
-                for asym in entity_asym_assembly_map[L1[i]]:
-                    if (assembly == asym_assembly_map[asym]): # Only print molIDs pertaining to particular assembly unit
-                        L2[i] = L2[i].upper()
-                        L2[i] = L2[i].replace(":", "")
-                        newciffile.write(L1[i] + " '" + L2[i].replace("'", "") + "'\n")
-                        break  # Because multiple asym per assembly and don't want to print multiple molID lines
-        else:
-            for asym in entity_asym_assembly_map[L1]:
-                if (asym_assembly_map[asym] == assembly):
-                    L2 = L2.upper()
-                    L2 = L2.replace(":", "")
-                    newciffile.write(L1 + " '" + L2.replace("'", "") + "'\n")
-                    break  # Because multiple asym per assembly and don't want to print multiple molID lines
+        for i in range(len(L1)):
+            L2[i] = L2[i].upper()
+            L2[i] = L2[i].replace(":", "")
+            newciffile.write(L1[i] + " '" + L2[i].replace("'", "") + "'\n")
+
         # Now write the coordinate portion of the file
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
@@ -259,8 +238,14 @@ def simplify_cif(oldfile, newfile, pdbformat):
         #
         hetatm_map = {}
         hetatm_count = 0
+
+        ### BEGIN NEW CODE : THIS SECTION FIXES THE BUG
+        ### This section is necessary to print the biological assemblies on separate files
+
+        BioAssembly = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
+
         for i in range(len(L1)):
-            if (assembly == asym_assembly_map[L7[i]]): # Only print molIDs pertaining to particular assembly unit
+            if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
                 if (L1[i]=="ATOM"):
                     newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
                 elif (L1[i]=="HETATM"):
@@ -269,6 +254,10 @@ def simplify_cif(oldfile, newfile, pdbformat):
                     else:
                         newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + "het" + L6[i] + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
         newciffile.write("#" + "\n")
+
+
+        ### END NEW CODE
+
 #
 def clean_cif(oldfile, newfile):
     """
@@ -324,4 +313,3 @@ def check_and_write_entry(entry, line, alllines, key, flag, linerange, newfile):
                 new_file.write(alllines[i])
         flag=0
     return flag
-
