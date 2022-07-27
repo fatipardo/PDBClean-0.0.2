@@ -68,7 +68,7 @@ def retrieve_sequence_from_PDB(keyword, mode='sequence', update=True, seqfile=No
                 sequence.append(line)
                 nextline=False
             else:
-                hit = re.findall(keyword, line)
+                hit = re.findall(keyword, line, flags=re.I)
                 if hit:
                     if(mode=='sequence'):
                         metadata.append(prevline)
