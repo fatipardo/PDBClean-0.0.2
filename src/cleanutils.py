@@ -21,7 +21,7 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
             if(step=='clean'):
                 if os.path.isfile(output_cif):
                     os.remove(output_cif)
-                clean_cif(input_cif, output_cifx) #FAPA, CLOSE )
+                clean_cif(input_cif, output_cif) #FAPA, CLOSE )
             elif(step=='simplify'):
                 # missing line: remove all assembly cif already created
                 simplify_cif(input_cif, output_cif, pdbformat)
