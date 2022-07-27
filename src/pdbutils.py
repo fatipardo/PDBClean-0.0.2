@@ -4,7 +4,7 @@ import shutil
 import re
 import numpy as np
 from urllib.request import urlopen
-from contextlib import closing
+from contextlib import closing, suppress
 #
 def download_pdb_from_metadata(metadata, projdir=None):
     """
@@ -40,12 +40,12 @@ def get_idset_from_metadata(metadata):
     for elt in metadata:
         idlist.append(elt[1:5])
     return sorted(set(idlist))
-    
+
 #
 def retrieve_sequence_from_PDB(keyword, mode='sequence', update=True, seqfile=None):
     """
     retrieve_sequence_from_PDB: outputs a list of sequences fom seqfile (that needs to be updated if not input)
-    
+
     Parameters:
     ===========
     - keyword: anything really
@@ -55,6 +55,8 @@ def retrieve_sequence_from_PDB(keyword, mode='sequence', update=True, seqfile=No
     - seqfile: if None, update needs to be True. The list retrieved online.
     """
     if update:
+        with suppress(FileNotFoundError):
+            os.remove(seqfile) # remove existing seqfile if any
         seqfile = retrieve_seqfile(seqfile=seqfile)
     metadata = []
     sequence = []
