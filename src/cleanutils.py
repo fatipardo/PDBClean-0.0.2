@@ -160,8 +160,10 @@ def simplify_cif(oldfile, newfile, pdbformat):
             L2 = mmcif_dict['_refine.ls_d_res_high']
         elif '_em_3d_reconstruction.resolution' in mmcif_dict:
             L2 = mmcif_dict['_em_3d_reconstruction.resolution']
+        elif '_refine_hist.d_res_high' in mmcif_dict:
+            L2 = mmcif_dict['_refine_hist.d_res_high']
         else:
-            L2 = mmcif_dict['_refine.hist.d_res_high']
+            L2 = '????'
         if isinstance(L1, list) and isinstance(L2, list):
             for i in range(len(L1)):
                 newciffile.write("'" + L1[i] + "' " + L2[i] + " " + "\n")
