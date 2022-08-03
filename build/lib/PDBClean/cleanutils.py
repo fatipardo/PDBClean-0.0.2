@@ -142,9 +142,9 @@ def simplify_cif(oldfile, newfile, pdbformat):
         L3 = mmcif_dict['_citation.pdbx_database_id_DOI']
         if isinstance(L1, list):
             for i in range(len(L1)):
-                newciffile.write("'" + re.sub("'", "", L1[i]) + "' " + L2[i] + " " + L3[i] + "\n")
+                newciffile.write("'" + re.sub("\n"," ",re.sub("'", "", L1[i])) + "' " + L2[i] + " " + L3[i] + "\n") #FAPA
         else:
-            newciffile.write("'" + re.sub("'", "", L1) + "' " + L2 + " " + L3 + "\n")
+            newciffile.write("'" + re.sub("\n"," ",re.sub("'", "", L1[i])) + "' " + L2[i] + " " + L3[i] + "\n") #FAPA
         # Write Resolution category
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
