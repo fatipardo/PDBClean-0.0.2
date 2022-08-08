@@ -407,7 +407,7 @@ def edit_conversion_interface(moldIDConversion_list, action='add'):
             search_term = input('MolID search term: ')
             molIDConversion_list, search_molIDConversion_list = molidutils.search_again_conversion(molIDConversion_list, search_molIDConversion_list, search_term)
         elif (input_submenu == "2"):
-            if(action=='add'):  
+            if(action=='add'):
                 print("""Enter new chain IDs, comma separated, no spaces""")
             elif(action=='remove'):
                 print("""Enter chain ID to be removed, comma separated, no spaces""")
@@ -648,8 +648,8 @@ def print_conflicts(found_map):
                     if chID not in was_printed:
                         was_printed[chID] = 1
                         print(molID_class.file_name + ":" + molID + ":" + chID + ":" + molID_class.chID_newchID_map[chID] + ":" + str(molID_class.concat_order[chID]))
-                        
-def accept_newchain(masterlist, found_map):                        
+
+def accept_newchain(masterlist, found_map):
     """
     accept_newchain
     """
@@ -661,6 +661,8 @@ def accept_newchain(masterlist, found_map):
                     usage[updated_molID_class] = 1
                     masterlist.remove(molID_class)
                     masterlist.append(updated_molID_class)
+
+    return masterlist
 
 #################
 # FINALIZE STEP #
@@ -703,7 +705,3 @@ def masterlist_to_pdb(filelist, masterlist, target_dir=None):
                             #         newciffile.write(line)
                             else:
                                 newciffile.write(line)
-
-
-
-
