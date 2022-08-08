@@ -37,7 +37,7 @@ molIDConversion_list    = molidutils.uniquelist_to_conversionlist(unique_molID_o
 #####################################
 # INTERACTIVE MOLID CONVERSION MENU #
 #####################################
-# Goal: 
+# Goal:
 # users complete their molID conversion templates by ensuring that each member of
 # molIDConversion_list has status complete = True
 input_menu = ""
@@ -48,8 +48,8 @@ concat_menu = ""
 while(input_menu != "QUIT"):
     if (input_menu_complete == "1"):
         print("""Congratulations! You have successfully constructed your
-                 conversion templates. You can proceed to the next section 
-                 by selection option 7 or, continue to edit your conversion 
+                 conversion templates. You can proceed to the next section
+                 by selection option 7 or, continue to edit your conversion
                  template through this menu
               """)
     print("""PDBClean MolID Conversion Build Menu
@@ -85,7 +85,7 @@ while(input_menu != "QUIT"):
 ########################################
 # INTERACTIVE MOLID CONCATENATION MENU #
 ########################################
-# Goal: 
+# Goal:
 
 if (concat_menu == "START"):
     # Prepare for concatenation step
@@ -95,7 +95,7 @@ if (concat_menu == "START"):
     # contain concatenated chains. These will be presented to the user in another
     # interactive menu section where they can update the planned conversion on
     # a file by file basis
-    
+
     master_molID_class_list = molidutils.update_masterlist(master_molID_class_list, molIDConversion_list)
 
     concat_menu = ""
@@ -109,13 +109,22 @@ if (concat_menu == "START"):
 
         if (concat_menu_complete == "1"):
             print("""Congratulations! You have successfully constructed your
-                     conversion templates.You can proceed to the next section 
-                     by selection option 7 or, continue to edit your conversion 
+                     conversion templates.You can proceed to the next section
+                     by selection option 7 or, continue to edit your conversion
                      template through this menu
                   """)
         print("""PDBClean Concatenations Menu
-                 Note: All proposed concatenations must be accepted before the curation can
+                 -------------------------------
+                 This menu appeared because you have assigned the same chain name to two (or more) entities.
+                 Note that this will concatenate the entities. So you need to either re-assign chain names,
+                 or ACCEPT concatenations.
+
+                 Note: All proposed concatenations must be accepted (by running option 5) before the curation can
                  be completed.
+
+                 Before you do anything, we suggest to choose option 2, so you know which concatenations have not
+                 been accepted. It will also give you the proper format of the input for options 3-5.
+
                  Select one of the following options to proceed:
                  1) Show all conversions
                  2) Show only unaccepted concatenations
