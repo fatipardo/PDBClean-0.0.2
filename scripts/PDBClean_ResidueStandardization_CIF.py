@@ -37,14 +37,14 @@ while(input_menu != "QUIT"):
           sep="\n")
     if(input_menu_check == "1"):
         print("    2) View conversion template")
-    if(input_menu_check == "1"):
         print("    3) Perform residue number standardization")
+        print("    OR Type QUIT to exit")
     input_menu = input('Option Number: ')
     if (input_menu == "1"):
-        Structure_Sequences_Aligned, Structure_ConversionTemplate, chid_list, input_menu_check = resstd.perform_multiple_alignment(Structure_Sequences, 
-                                                                                                                                   ChID_ResiNum_Vector, 
-                                                                                                                                   structid_list, 
-                                                                                                                                   chid_list, 
+        Structure_Sequences_Aligned, Structure_ConversionTemplate, chid_list, input_menu_check = resstd.perform_multiple_alignment(Structure_Sequences,
+                                                                                                                                   ChID_ResiNum_Vector,
+                                                                                                                                   structid_list,
+                                                                                                                                   chid_list,
                                                                                                                                    input_menu_check)
     elif (input_menu == "2" and input_menu_check == "1"):
         resstd.show_conversiontemplate(Structure_ConversionTemplate)

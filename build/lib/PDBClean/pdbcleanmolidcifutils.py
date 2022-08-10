@@ -519,7 +519,6 @@ def edit_concatenation_interface(master_molID_class_list, new_order=None, action
     """
     concat_submenu = 0
     while(concat_submenu != "QUIT"):
-        print("I am here, but should not be 0_0")
         search_term, concat_submenu = get_search_term(concat_submenu)
         if concat_submenu != "QUIT":
             found_molID_class_chID_map, molID_class_been_copied = search_chains(master_molID_class_list, search_term)
@@ -554,16 +553,12 @@ def edit_concatenation_interface(master_molID_class_list, new_order=None, action
                     while (concat_submenu != "QUIT"):
                         concat_submenu = input('Enter ACCEPT or DENY: ')
                         if (concat_submenu == "ACCEPT"):
-                            print("yeah, yeah, we are here 1")
                             master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
                         concat_submenu = "QUIT"
                         concat_menu = ""
                 else:
-                    print("yeah, yeah, we are here else")
                     master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
                     concat_submenu = "QUIT"
-    print("we are now about to leave")
-    print(master_molID_class_list)
     return master_molID_class_list, new_order
 
 def get_search_term(value):
@@ -666,7 +661,6 @@ def accept_newchain(masterlist, found_map):
                     usage[updated_molID_class] = 1
                     masterlist.remove(molID_class)
                     masterlist.append(updated_molID_class)
-                    
     return masterlist
 
 #################
@@ -710,4 +704,3 @@ def masterlist_to_pdb(filelist, masterlist, target_dir=None):
                             #         newciffile.write(line)
                             else:
                                 newciffile.write(line)
-
