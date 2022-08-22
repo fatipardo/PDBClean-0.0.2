@@ -238,7 +238,7 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                         unused_chid.append(chid)
                         # chid is unused . . . will not change. If it is in destination list, then there will be conflict
                 for chid in unused_chid:
-                    used_dest_chid = Struct_ChainReassignmentMap.values()
+                    used_dest_chid = list(Struct_ChainReassignmentMap.values()) #FAPA
                     if chid in used_dest_chid:
                         # chid is unused and a destination so a conflict exists and needs to be given destination
                         II = Structure_Sequences.index(chid_seq_map)

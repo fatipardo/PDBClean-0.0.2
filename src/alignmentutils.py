@@ -47,7 +47,7 @@ def AlignSequences(sequence_vec):
 
     os.popen('muscle -in Seq.fa -out Seq.afa')
 
-    time.sleep(1)
+    time.sleep(20) #FAPA
 
     aligned_seq = []
     with open("Seq.afa") as seqfile:
@@ -110,4 +110,3 @@ def ScoreSequenceAlignment(seq1, seq2):
             score += 1
     score = score/len(seq1)
     return score
-
