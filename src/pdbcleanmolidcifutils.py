@@ -370,6 +370,32 @@ def show_unassigned_conversion(current_list, step='conversion'):
                               molID_class.chID_newchID_map[chID] + ":"
                               + str(molID_class.concat_order[chID]))
 
+# FAPA TEST STARTS
+
+def return_unassigned_conversion(current_list, step='conversion'):
+    """
+    show_unassigned_conversion
+    """
+    unassigned = []
+
+    if(step=='conversion'):
+        for molIDConversion in current_list:
+            molIDConversion.check_for_completeness()
+            if molIDConversion.complete is False:
+                molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+                print(str(molIDConversion.occur)+":"+str(molIDConversion.molID)+":"+molIDCon_chID_list_forPrint)
+    elif(step=='concatenation'):
+        for molID_class in current_list:
+            for molID in molID_class.molID_chID:
+                for chID in molID_class.molID_chID[molID]:
+                    if molID_class.complete_order[chID] is False:
+                        unassigned.append(molID_class.file_name + ":" + molID + ":"
+                              + chID + ":" +
+                              molID_class.chID_newchID_map[chID] + ":"
+                              + str(molID_class.concat_order[chID]))
+    return unassigned
+# FAPA TEST ENDS
+
 def add_user_conversion(molIDConversion_list):
     """
     add_user_conversion:
@@ -561,6 +587,61 @@ def edit_concatenation_interface(master_molID_class_list, new_order=None, action
                     concat_submenu = "QUIT"
     return master_molID_class_list, new_order
 
+#### FAPA TEST BEGINS
+
+def list_accept_concatenations(master_molID_class_list, search_term, new_order=None, action='accept'):
+    """
+    edit_concatenation_interface
+    """
+    concat_submenu = 0
+    while(concat_submenu != "QUIT"):
+        search_term = search_term.split(":")
+        #search_term, concat_submenu = get_concat_line_term(concat_submenu)
+        if concat_submenu != "QUIT":
+            found_molID_class_chID_map, molID_class_been_copied = search_chains(master_molID_class_list, search_term)
+        while (concat_submenu != "QUIT"):
+            if(action=='try'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Update new chain ID
+                      """)
+            elif(action=='update'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Update concatenation order
+                      """)
+            elif(action=='accept'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Accept planned concatenation
+                      """)
+            concat_submenu = input('Option Number: ')
+            if (concat_submenu == "1"):
+                break
+            elif (concat_submenu == "2"):
+                if(action=='try'):
+                    new_order = input('New Chain ID: ')
+                elif(action=='update'):
+                    new_order = input('New concatenation order: ')
+                found_molID_class_chID_map = edit_chain_order(found_molID_class_chID_map, new_order, action=action)
+                if(action=='try'):
+                    print_conflicts(found_molID_class_chID_map)
+                    print("Would you like to accept or deny these changes?")
+                    while (concat_submenu != "QUIT"):
+                        concat_submenu = input('Enter ACCEPT or DENY: ')
+                        if (concat_submenu == "ACCEPT"):
+                            master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
+                        concat_submenu = "QUIT"
+                        concat_menu = ""
+                else:
+                    #print('I AM HERE')
+                    master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
+                    #print(master_molID_class_list)
+                    concat_submenu = "QUIT"
+    return master_molID_class_list, new_order
+
+#### FAPA TEST ENDS
+
 def get_search_term(value):
     """
     get_search_term
@@ -576,6 +657,30 @@ def get_search_term(value):
         if (len(search_term) > 4):
             search_ok = "OK"
     return search_term, value
+
+
+## FAPA TEST STARTS
+
+def get_concat_line_term(value):
+    """
+    get_search_term
+    """
+    search_ok = ""
+    while (search_ok != "OK"):
+        print("concat format - File:MolID:OldChain:NewChain:ConcatOrder")
+        print(show_unassigned_conversion(master_molID_class_list, step='concatenation')[0][0])
+        #search_term = input('Search ')
+        search_term=="QUIT"
+        if search_term == "QUIT":
+            search_ok = "OK"
+            value = "QUIT"
+        search_term = search_term.split(":")
+        if (len(search_term) > 4):
+            search_ok = "OK"
+    return search_term, value
+
+
+## FAPA TEST ENDS
 
 def search_chains(master_molID_class_list, search_term):
     """

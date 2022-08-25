@@ -167,9 +167,11 @@ if (concat_menu == "START"):
                  3) Search and modify destination chainIDs of proposed concatenations
                  4) Search and modify order of proposed concatenations
                  5) Search and accept proposed concatenations
+                 6) Accept proposed concatenation one by one
+                    (Repeat this step until finalizing option appears)
               """)
         if (concat_menu_complete == "1"):
-            print("    6) Finalize Curation")
+            print("    7) Finalize Curation")
 
         concat_menu = input('Option Number: ')
 
@@ -187,6 +189,13 @@ if (concat_menu == "START"):
             new_order=None
             master_molID_class_list = molidutils.edit_concatenation_interface(master_molID_class_list, new_order=new_order, action='accept')[0]
         elif (concat_menu == "6"):
+            unassigned_MolID=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')[0]
+            print("This is the concatenation you need to accept:")
+            #print(unassigned_MolID)
+            new_order=None
+            master_molID_class_list = molidutils.list_accept_concatenations(master_molID_class_list, unassigned_MolID, new_order=new_order, action='accept')[0]
+            # Note for tomorrow: here we need to create a new function in molidutils, so we can go over all concatenations!
+        elif (concat_menu == "7"):
             print("Finalizing Curation ...")
             molidutils.masterlist_to_pdb(filelist, master_molID_class_list, target_dir=target_dir)
             concat_menu = "QUIT"
