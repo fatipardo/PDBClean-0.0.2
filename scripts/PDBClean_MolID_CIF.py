@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/Users/fatima/anaconda3/envs/PDBC0722/bin/python
 # coding: utf-8
 #
 # ! ! ! master_molID_class_list is very important
@@ -44,6 +44,7 @@ input_menu = ""
 input_menu_complete = ""
 # For use in the next section
 concat_menu = ""
+final_menu=""
 
 while(input_menu != "QUIT"):
     if (input_menu_complete == "1"):
@@ -79,13 +80,42 @@ while(input_menu != "QUIT"):
     elif (input_menu == "7"):
         if (input_menu_complete == "1"):
             input_menu = "QUIT"
-            concat_menu = "START"
+            #concat_menu = "START" #FAPA
+            final_menu = "START"
     input_menu_complete = molidutils.check_complete(molIDConversion_list)
+
+#########################################
+# New menu to finalize without printing #
+# concatenation menu                    #
+#########################################
+
+if (final_menu == "START"):
+
+    count_problems = molidutils.problem_counter(master_molID_class_list)
+    if (count_problems == 0):
+        final_menu_complete = "1"
+
+    if (final_menu_complete == "1"):
+        print("    6) Finalize Curation")
+
+    final_menu = input('Option Number: ')
+
+    if (final_menu == "6"):
+        print("Finalizing Curation ...")
+        molidutils.masterlist_to_pdb(filelist, master_molID_class_list, target_dir=target_dir)
+        final_menu = "QUIT"
+    else:
+        print("Sorry, something went wrong, try again")
+
+
 
 ########################################
 # INTERACTIVE MOLID CONCATENATION MENU #
 ########################################
 # Goal:
+
+
+
 
 if (concat_menu == "START"):
     # Prepare for concatenation step
