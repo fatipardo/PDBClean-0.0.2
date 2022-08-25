@@ -79,9 +79,15 @@ while(input_menu != "QUIT"):
         molIDConversion_list = molidutils.edit_conversion_interface(molIDConversion_list, action='remove')
     elif (input_menu == "7"):
         if (input_menu_complete == "1"):
+            master_molID_class_list = molidutils.update_masterlist(master_molID_class_list, molIDConversion_list)
+            count_problems = molidutils.problem_counter(master_molID_class_list)
+            if (count_problems == 0):
+                final_menu = "START"
+            elif (count_problems != 0):
+                concat_menu = "START"
             input_menu = "QUIT"
             #concat_menu = "START" #FAPA
-            final_menu = "START"
+            #final_menu = "START"
     input_menu_complete = molidutils.check_complete(molIDConversion_list)
 
 #########################################
