@@ -1,4 +1,4 @@
-name: PDBC0722
+name: PDBCinstallTEST
 channels:
   - conda-forge
   - defaults
@@ -177,7 +177,6 @@ dependencies:
   - zlib=1.2.12=hfe4f2af_2
   - zstd=1.5.2=ha9df2e0_2
   - pip:
-    - pdbclean==0.0.1
     - pip==22.1.2
     - pyqt5-sip==12.11.0
     - wheel==0.37.1
