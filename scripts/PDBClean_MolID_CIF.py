@@ -1,4 +1,4 @@
-#!/Users/fatima/anaconda3/envs/PDBC0722/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 #
 # ! ! ! master_molID_class_list is very important
