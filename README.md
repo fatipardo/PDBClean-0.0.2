@@ -38,6 +38,10 @@ This is also the last step! You have a curated dataset!
 
 > **Note:** There are more advanced curation steps and analysis that we will cover in future notebooks.
 
+### [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb)
+
+This mini tutorial can be run after doing step 2. It show you how our check_project tool works. 
+
 # Installation
 
 We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need.
