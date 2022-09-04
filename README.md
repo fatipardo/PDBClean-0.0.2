@@ -64,7 +64,7 @@ We have tested the installation on MacOS.
 
 >ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
 
-4. Install Jupiter Notebook kernel
+4. Install Jupyter Notebook kernel
 
 python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 
