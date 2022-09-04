@@ -19,7 +19,7 @@ import numpy
 # HEADER
 #
 
-VERSION      = "0.0.1"
+VERSION      = "0.0.2"
 ISRELEASED   = False
 DISABLE_CUDA = True
 __author__   = "Levitt Lab, Stanford"
@@ -29,10 +29,10 @@ metadata = {
     'name': 'PDBClean',
     'version': VERSION,
     'author': __author__,
-    'author_email': 'fpoitevi@stanford.edu',
+    'author_email': 'fpardo@stanford.edu',
     'license': 'MIT',
-    'url': 'https://github.com/csblab/PDBClean',
-    'download_url': 'https://github.com/csblab/PDBClean',
+    'url': 'https://github.com/fatipardo/PDBClean-0.0.2',
+    'download_url': 'https://github.com/fatipardo/PDBClean-0.0.2',
     'platforms': ['Linux', 'OSX'],
     'description': "PDB curation tools",
     'long_description': """PDBClean offers curation tools for structural ensemble deposited in the Protein Data Bank."""}
@@ -124,4 +124,3 @@ def print_warnings():
 if __name__ == '__main__':
     setup(**metadata) # ** will unpack dictionary 'metadata' providing the values as arguments
     print_warnings()
-
