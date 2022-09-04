@@ -62,7 +62,7 @@ We have tested the installation on MacOS.
 
 3. Link muscle to our new environment
 
->ln -s ${PATH/TO/MUSCLE}/muscle  ${PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
+>ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
 
 4. Install Jupiter Notebook kernel
 
@@ -75,7 +75,7 @@ python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 > jupiter notebook
 
 - Open notebook you want
-- If Jupyter does not recognize the kernel, Select ‘PDBCleanV2’ from the drop down menu. 
+- If Jupyter does not recognize the kernel, Select ‘PDBCleanV2’ from the drop down menu.
 
 
 (**Note:** we are working on this section, come back soon for more details and updated version)
