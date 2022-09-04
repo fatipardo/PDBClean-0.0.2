@@ -72,7 +72,7 @@ python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 5. Running notebook:
 
 > cd Notebooks
-> jupiter notebook
+> jupyter notebook
 
 - Open notebook you want
 - If Jupyter does not recognize the kernel, Select ‘PDBCleanV2’ from the drop down menu.
