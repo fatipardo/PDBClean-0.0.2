@@ -73,8 +73,8 @@ def select_standard_seq_from_reference(Structure_Sequences, Standard_Sequences, 
         if (input_submenu == "1"):
             show_list(structid_list)
         elif (input_submenu == "2"):
-            Standard_Sequences, input_menu_check_1, input_submenu_check_1 = select_input_structure(Structure_Sequences, 
-                                                                                                   structid_list, 
+            Standard_Sequences, input_menu_check_1, input_submenu_check_1 = select_input_structure(Structure_Sequences,
+                                                                                                   structid_list,
                                                                                                    input_menu_check_1,
                                                                                                    input_submenu_check_1)
         elif (input_submenu == "3" and input_submenu_check_1 == "1"):
@@ -399,7 +399,8 @@ def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list
                             line_split = line.strip()
                             line_split = line.split()
                             if line_split[17] in ChainReassignmentMapping_List[I]:
-                                newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
+                                newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n" #FAPA TEST 
+                                #newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
                                 newciffile.write(newline)
                             else:
                                 newciffile.write(line)
@@ -416,6 +417,7 @@ def reassignedmaps_to_log(ChainReassignmentMapping_List, ChainReassignmentScores
             for chid in ChainReassignmentMapping_List[I]:
                 recordfile.write(structid_list[I] + ":" + chid + ":" + ChainReassignmentMapping_List[I][chid] + ":" + str(ChainReassignmentScores_List[I][chid]) + "\n")
     if verbose:
+        print("Original Chain ID | New Chain ID | Naive Similarity Score ")
         for i in range(len(ChainReassignmentMapping_List)):
             ChainReassignmentMap = ChainReassignmentMapping_List[i]
             ChainReassignmentScore = ChainReassignmentScores_List[i]

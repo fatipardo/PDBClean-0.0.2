@@ -1,4 +1,4 @@
-name: PDBCinstallTEST
+name: PDBCleanV2
 channels:
   - conda-forge
   - defaults
@@ -180,4 +180,4 @@ dependencies:
     - pip==22.1.2
     - pyqt5-sip==12.11.0
     - wheel==0.37.1
-prefix: /Users/fatima/anaconda3/envs/PDBC0722
+prefix: ~/anaconda3/envs/PDBCleanV2
