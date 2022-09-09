@@ -50,7 +50,7 @@ We have tested the installation on MacOS.
 0. Install muscle 
 
 PDBClean also uses [muscle](https://drive5.com/muscle5/)
-(click the link and download the newest version for your computer)
+(click the link and download the newest version for your computer). In order to use Muscle, we must first change the computers permissions and allow the use of Muscle.
 >chmod a+x muscle5.1.(YOUR VERSION)
 - Example: chmod a+x muscle5.1.macos_intel64
 - You will get a warning, click cancel. Then go to your computers system preferences. Open security and privacy. Then general. You will see a notification about muscle, click "allow anyway". 
