@@ -47,18 +47,6 @@ This mini tutorial can be run after doing step 2. It shows you how our check_pro
 We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean. You will need to link muscle to your virtual environment, just follow the instructions we provide.
 We have tested the installation on MacOS.
 
-0. Install muscle 
-
-PDBClean also uses [muscle](https://drive5.com/muscle5/)
-(click the link and download the newest version for your computer). In order to use Muscle, we must first change the file's permissions, to allow it to execute.
->chmod a+x muscle5.1.{YOUR VERSION}
-- Example: chmod a+x muscle5.1.macos_intel64
-- If you are using MacOS, you will get a warning, click `cancel`. Then go to your computers `System Preferences`. Open `Security & Privacy`. Then `General`. You will see a notification about muscle, click `Allow Anyway`. 
-
-Now you should be able to run Muscle by typing:
->./muscle5.1.{YOUR VERSION}
-
-
 1. Download PDBClean from GitHub and install environment from YML file
 
 >git clone git@github.com:fatipardo/PDBClean-0.0.2.git
@@ -73,7 +61,19 @@ Now you should be able to run Muscle by typing:
 
 >python setup.py install
 
-3. Link muscle to our new environment
+3. Download Muscle and Link Muscle to our new environment
+
+PDBClean uses [muscle](https://drive5.com/muscle5/)
+(click the link and download the newest version for your computer). In order to use Muscle, we must first change the file's permissions, to allow it to execute.
+
+>chmod a+x muscle5.1.{YOUR VERSION}
+- Example: chmod a+x muscle5.1.macos_intel64
+- If you are using MacOS, you will get a warning, click `cancel`. Then go to your computers `System Preferences`. Open `Security & Privacy`. Then `General`. You will see a notification about muscle, click `Allow Anyway`. 
+
+Now you should be able to run Muscle by typing:
+>./muscle5.1.{YOUR VERSION}
+
+In order to link Muscle to your virtual environment, type:
 
 >ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
 - Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/name/opt/anaconda3/envs/PDBCleanV2/bin/muscle
