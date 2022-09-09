@@ -70,13 +70,13 @@ PDBClean uses [muscle](https://drive5.com/muscle5/)
 - Example: chmod a+x muscle5.1.macos_intel64
 - If you are using MacOS, you will get a warning, click `cancel`. Then go to your computers `System Preferences`. Open `Security & Privacy`. Then `General`. You will see a notification about muscle, click `Allow Anyway`. 
 
-Now you should be able to run Muscle by typing:
+Now you should be able to run Muscle by typing in the terminal:
 >./muscle5.1.{YOUR VERSION}
 
 In order to link Muscle to your virtual environment, type:
 
 >ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
-- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/name/opt/anaconda3/envs/PDBCleanV2/bin/muscle
+- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/username/opt/anaconda3/envs/PDBCleanV2/bin/muscle
 
 4. Install Jupyter Notebook kernel
 
