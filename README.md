@@ -40,29 +40,37 @@ This is also the last step! You have a curated dataset!
 
 ### [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb)
 
-This mini tutorial can be run after doing step 2. It show you how our check_project tool works.
+This mini tutorial can be run after doing step 2. It shows you how our check_project tool works.
 
 # Installation
 
-We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need.
-PDBClean also uses [muscle](https://drive5.com/muscle5/), you will need to link muscle to your virtual environment, just follow the instructions we provide.
+We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean. PDBClean also uses [muscle](https://drive5.com/muscle5/), you will need to link muscle to your virtual environment, just follow the instructions we provide.
 We have tested the installation on MacOS.
 
-0. Install muscle (just download the exe file and remember where you saved it)
+0. Install muscle (click the link and download the newest version for your computer)
+>chmod a+x muscle5.1.(your version)
+- Example: chmod a+x muscle5.1.macos_intel64
+- You will get a warning, click cancel. Then go to your computers system preferences. Open security and privacy. Then general. You will see a notification about muscle, click allow anyway. 
+>./muscle5.1.(your version)
+
 1. Download PDBClean from GitHub and install environment from YML file
 
 >git clone git@github.com:fatipardo/PDBClean-0.0.2.git
+
 >cd PDBClean-0.0.2
+
 >conda env create -f environment.yml
 
 2. Activate environment and install PDBClean
 
 >conda activate PDBCleanV2
+
 >python setup.py install
 
 3. Link muscle to our new environment
 
 >ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
+- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/liv/opt/anaconda3/envs/PDBCleanV2/bin/muscle
 
 4. Install Jupyter Notebook kernel
 
@@ -72,6 +80,7 @@ python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 5. Running notebook:
 
 > cd Notebooks
+
 > jupyter notebook
 
 - Open notebook you want
