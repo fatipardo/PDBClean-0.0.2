@@ -48,6 +48,7 @@ We recommend installing PDBClean inside a virtual environment. We provide an `en
 We have tested the installation on MacOS.
 
 0. Install muscle 
+
 PDBClean also uses [muscle](https://drive5.com/muscle5/)
 (click the link and download the newest version for your computer)
 >chmod a+x muscle5.1.(YOUR VERSION)
