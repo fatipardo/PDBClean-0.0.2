@@ -70,7 +70,7 @@ We have tested the installation on MacOS.
 3. Link muscle to our new environment
 
 >ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
-- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/liv/opt/anaconda3/envs/PDBCleanV2/bin/muscle
+- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/name/opt/anaconda3/envs/PDBCleanV2/bin/muscle
 
 4. Install Jupyter Notebook kernel
 
