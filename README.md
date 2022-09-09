@@ -50,7 +50,7 @@ We have tested the installation on MacOS.
 0. Install muscle (click the link and download the newest version for your computer)
 >chmod a+x muscle5.1.(your version)
 - Example: chmod a+x muscle5.1.macos_intel64
-- You will get a warning, click cancel. Then go to your computers system preferences. Open security and privacy. Then general. You will see a notification about muscle, click allow anyway. 
+- You will get a warning, click cancel. Then go to your computers system preferences. Open security and privacy. Then general. You will see a notification about muscle, click "allow anyway". 
 >./muscle5.1.(your version)
 
 1. Download PDBClean from GitHub and install environment from YML file
