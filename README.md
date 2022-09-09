@@ -93,12 +93,9 @@ python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 - If Jupyter does not recognize the kernel, Select ‘PDBCleanV2’ from the drop down menu.
 
 
-(**Note:** we are working on this section, come back soon for more details and updated version)
-
-
 ## PDBClean team
 
 The code in this repository is based on the code found [here](https://test.pypi.org/project/PDBClean/#files).
-Which was originally written by Frédéric Poitevin and Nicholas Corsepius.
+The code was originally written by Frédéric Poitevin and Nicholas Corsepius.
 Fátima Pardo Avila and Liv Weiner created this repository.
 We all worked on this project while being part of the Levitt Lab at Stanford University.
