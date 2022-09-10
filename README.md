@@ -80,7 +80,7 @@ In order to link Muscle to your virtual environment, type in the terminal:
 
 4. Install Jupyter Notebook kernel
 
-python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
+> python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 
 
 5. Running notebook:
