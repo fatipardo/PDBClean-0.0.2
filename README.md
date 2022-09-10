@@ -63,7 +63,7 @@ We have tested the installation on MacOS.
 
 3. Download Muscle and Link Muscle to our new environment
 
-PDBClean uses [muscle](https://drive5.com/muscle5/)
+PDBClean uses [Muscle](https://drive5.com/muscle5/)
 (click the link and download the newest version for your computer). In order to use Muscle, we must first change the file's permissions, to allow it to execute.
 
 >chmod a+x muscle5.1.{YOUR VERSION}
