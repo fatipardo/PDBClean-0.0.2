@@ -10,15 +10,15 @@ We have created Jupyter Notebooks to show how to create a curated ensemble of st
 
 Download all structures that match the name and sequence of your molecule of interest.
 
-> **Note:** This notebook does not display on the github website, download and open in your browser.   
+> **Note:** This notebook does not display on the Github website, download and open in your browser.   
 
 ### [Step 1. Clean Structures and Create one CIF file per biological assembly.](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step1.CreateOneCIFFilePerBiologicalAssembly.ipynb)
 
-A CIF file may contain multiple biological assemblies within one asymmetric unit. In this step we separe these biologica assemblies, and create one CIF file for each one. We also reduce the number of data blocks included in the CIF file.
+A CIF file may contain multiple biological assemblies within one asymmetric unit. In this step we separate these biological assemblies, and create one CIF file for each one. We also reduce the number of data blocks included in the CIF file.
 
 ### [Step 2.1. Assign MOLID to the entities found in the CIF files, version 1](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step2.1.AssignMolIDToEntitiesFoindInCIFfiles1.ipynb)
 
-The script foes over ll the CIF files and collects all entities. The user can decide what Mol ID to assign them. In this example we show the case in which we give a different ID to each entity found.
+The script goes over all the CIF files and collects all entities. The user can decide what Mol ID to assign them. In this example, we show the case in which we give a different ID to each entity found.
 This step is also important because it lists all the entities that were found in your ensemble, so it allows you to identify if there is a structure that doesn't belong. We show an example of this in this notebook.
 
 ### [Step 2.2. Assign MOLID to the entities found in the CIF files, version 2](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step2.2.AssignMolIDToEntitiesFoindInCIFfiles2.ipynb)
