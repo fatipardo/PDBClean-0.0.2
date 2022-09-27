@@ -45,7 +45,7 @@ def AlignSequences(sequence_vec):
             newfafile.write("> Seq" + "\n")
             newfafile.write(seq + "\n")
 
-    os.popen('muscle -in Seq.fa -out Seq.afa')
+    os.popen('muscle -align Seq.fa -output Seq.afa')
 
     time.sleep(20) #FAPA
 
@@ -71,7 +71,7 @@ def AlignSequences_v2(sequence_vec, file_name):
             newfafile.write("> Seq " + str(i)+ "\n")
             newfafile.write(seq + "\n")
             i += 1
-    command = "muscle -in "+file_name+".fa -out "+file_name+".afa"
+    command = "muscle -align "+file_name+".fa -output "+file_name+".afa"
     os.popen(command)
     time.sleep(1)
     aligned_seq_map = {}
