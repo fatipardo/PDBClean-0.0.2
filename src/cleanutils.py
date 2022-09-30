@@ -232,31 +232,48 @@ def simplify_cif(oldfile, newfile, pdbformat):
         # This is strictly to clean up a common problem found in ribosome structures
         # HETATMs are defined mid chain, ie in an asymmetric unit of non-HETATMs
         # Want to treat these atoms different from other HETATMs
-        asymatom_list = []
-        for i in range(len(L1)):
-            if L1[i] == "ATOM":
-                if L7[i] not in asymatom_list:
-                    asymatom_list.append(L7[i])
+
+        ##FAPA ERASES
+        #asymatom_list = []
+        #for i in range(len(L1)):
+        #        if L1[i] == "ATOM":
+        #        if L7[i] not in asymatom_list:
+        #            asymatom_list.append(L7[i])
         #
-        hetatm_map = {}
-        hetatm_count = 0
+        #hetatm_map = {}
+        #hetatm_count = 0
+        ##END FATIMA ERASES
 
         ### BEGIN NEW CODE : THIS SECTION FIXES THE BUG
         ### This section is necessary to print the biological assemblies on separate files
 
         BioAssembly = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
 
-        for i in range(len(L1)):
-            if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
-                if (L1[i]=="ATOM"):
-                    newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-                elif (L1[i]=="HETATM"):
-                    if L7[i] in asymatom_list:
-                        newciffile.write("ATOM" + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-                    else:
-                        newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + "het" + L6[i] + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-        newciffile.write("#" + "\n")
+        ### TEST FAPA
+        #print(assembly)
+        #print(BioAssembly[int(assembly)-1])
+        #print(type(BioAssembly[int(assembly)-1]))
+        #print(BioAssembly[int(assembly)-1].split(','))
+        #print(list(re.sub(",", "", BioAssembly[int(assembly)-1])))
+        ### END TEST FAPA
 
+#        for i in range(len(L1)):
+            #if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
+#            if (L7[i] in BioAssembly[int(assembly)-1]):
+#                    newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
+#                elif (L1[i]=="HETATM"):
+#                    if L7[i] in asymatom_list:
+#                        newciffile.write("ATOM" + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
+#                    else:
+#                        newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + "het" + L6[i] + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
+#        newciffile.write("#" + "\n")
+
+
+        for i in range(len(L1)):
+            #if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
+            if (L7[i] in BioAssembly[int(assembly)-1].split(',')):
+                newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
+        newciffile.write("#" + "\n")
 
         ### END NEW CODE
 
