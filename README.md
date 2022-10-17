@@ -61,29 +61,12 @@ We have tested the installation on MacOS.
 
 >python setup.py install
 
-3. Download Muscle and link Muscle to our new environment
-
-PDBClean uses [Muscle](https://drive5.com/muscle5/)
-(click the link and download the newest version for your computer). In order to use Muscle, we must first change the file's permissions, to allow it to execute.
-
->chmod a+x muscle5.1.{YOUR VERSION}
-- Example: chmod a+x muscle5.1.macos_intel64
-- If you are using MacOS, you will get a warning, click `Cancel`. Then go to your computers `System Preferences`. Open `Security & Privacy`. Then `General`. You will see a notification about muscle, click `Allow Anyway`. 
-
-Now you should be able to run Muscle by typing in the terminal:
->./muscle5.1.{YOUR VERSION}
-
-In order to link Muscle to your virtual environment, type in the terminal:
-
->ln -s {PATH/TO/MUSCLE}/muscle  {PATH/TO/ANACONDA}/anaconda3/envs/PDBCleanV2/bin/
-- Example: ln -s ~/Downloads/muscle5.1.macos_intel64 /Users/username/opt/anaconda3/envs/PDBCleanV2/bin/muscle
-
-4. Install Jupyter Notebook kernel
+3. Install Jupyter Notebook kernel
 
 > python -m ipykernel install --user --name PDBCleanV2 --display-name PDBCleanV2
 
 
-5. Running notebook:
+4. Running notebook:
 
 > cd Notebooks
 
