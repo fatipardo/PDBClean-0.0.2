@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/Users/fatima/anaconda3/envs/PDBCleanV2/bin/python
 # coding: utf-8
 #
 # ! ! ! master_molID_class_list is very important
@@ -72,7 +72,9 @@ while(input_menu != "QUIT"):
     elif (input_menu == "3"):
         molIDConversion_list = molidutils.add_user_conversion(molIDConversion_list)
     elif (input_menu == "4"):
-        molIDConversion_list = molidutils.edit_conversion_interface(molIDConversion_list, action='add')
+        testX=molIDConversion_list#FAPA
+        #print(testX[0])
+        molIDConversion_list = molidutils.edit_conversion_interface(testX, action='add')#FAPA
     elif (input_menu == "5"):
         molIDConversion_list = molidutils.edit_conversion_manual(molIDConversion_list)
     elif (input_menu == "6"):

@@ -185,7 +185,8 @@ def make_MolID_cif(myfile):
     # Need the entity_id and auth_asym_id correspondence
     # Put into entity_chIDlist_map
     entity_list = mmcif_dict['_atom_site.label_entity_id']
-    chID_list = mmcif_dict['_atom_site.auth_asym_id']
+    #chID_list = mmcif_dict['_atom_site.auth_asym_id'] # FAPA
+    chID_list = mmcif_dict['_atom_site.label_asym_id'] #FAPA
     entity_chIDlist_map = {}
 
     for i in range(len(entity_list)):
@@ -355,20 +356,32 @@ def show_unassigned_conversion(current_list, step='conversion'):
     show_unassigned_conversion
     """
     if(step=='conversion'):
+        counter1=0
+        counter2=0
         for molIDConversion in current_list:
             molIDConversion.check_for_completeness()
             if molIDConversion.complete is False:
+                counter1+=1
+                counter2=counter2+molIDConversion.occur
                 molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+                #molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+                #print(str(molIDConversion.occur)+":"+str(molIDConversion.molID)+":"+molIDCon_chID_list_forPrint)
                 print(str(molIDConversion.occur)+":"+str(molIDConversion.molID)+":"+molIDCon_chID_list_forPrint)
+        print("You need to accept %s entity conversions" % counter1)
+        print("You need to accept %s total chain conversions" % counter2)
+
     elif(step=='concatenation'):
+        counter=0
         for molID_class in current_list:
             for molID in molID_class.molID_chID:
                 for chID in molID_class.molID_chID[molID]:
                     if molID_class.complete_order[chID] is False:
+                        counter+=1
                         print(molID_class.file_name + ":" + molID + ":"
                               + chID + ":" +
                               molID_class.chID_newchID_map[chID] + ":"
                               + str(molID_class.concat_order[chID]))
+        print("You need to accept %s concatenations" % counter )
 
 # FAPA TEST STARTS
 
@@ -382,7 +395,8 @@ def return_unassigned_conversion(current_list, step='conversion'):
         for molIDConversion in current_list:
             molIDConversion.check_for_completeness()
             if molIDConversion.complete is False:
-                molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+                #molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+                molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID))#FAPA
                 print(str(molIDConversion.occur)+":"+str(molIDConversion.molID)+":"+molIDCon_chID_list_forPrint)
     elif(step=='concatenation'):
         for molID_class in current_list:
@@ -413,12 +427,13 @@ def add_user_conversion(molIDConversion_list):
     # !! molIDConversion_list has been updated
     return molIDConversion_list
 
-def edit_conversion_interface(moldIDConversion_list, action='add'):
+def edit_conversion_interface(molIDConversion_list, action='add'): #FAPA: IT WAS A TYPO!!! -_-
     """
     edit_conversion_interface
     """
     search_term = input('MolID search term: ')
-    molIDConversion_list, search_molIDConversion_list = molidutils.search_conversion(molIDConversion_list, search_term)
+    print(molIDConversion_list)# FAPA
+    molIDConversion_list, search_molIDConversion_list = search_conversion(molIDConversion_list, search_term) #FAPA removed molidutils.
     input_submenu = 0
     while (input_submenu != "DONE"):
         print("    1) Further narrow down search results")
@@ -431,7 +446,7 @@ def edit_conversion_interface(moldIDConversion_list, action='add'):
             input_submenu = "DONE"
         if (input_submenu == "1"):
             search_term = input('MolID search term: ')
-            molIDConversion_list, search_molIDConversion_list = molidutils.search_again_conversion(molIDConversion_list, search_molIDConversion_list, search_term)
+            molIDConversion_list, search_molIDConversion_list = search_again_conversion(molIDConversion_list, search_molIDConversion_list, search_term)
         elif (input_submenu == "2"):
             if(action=='add'):
                 print("""Enter new chain IDs, comma separated, no spaces""")
@@ -441,7 +456,7 @@ def edit_conversion_interface(moldIDConversion_list, action='add'):
             if (chID_list == "") or (chID_list == "QUIT"):
                 pass
             else:
-                molIDConversion_list, search_molIDConversion_list = molidutils.edit_chain_conversion(molIDConversion_list, search_molIDConversion_list, chID_list, action=action)
+                molIDConversion_list, search_molIDConversion_list = edit_chain_conversion(molIDConversion_list, search_molIDConversion_list, chID_list, action=action)
             input_submenu = "DONE"
     return molIDConversion_list
 
@@ -787,16 +802,16 @@ def masterlist_to_pdb(filelist, masterlist, target_dir=None):
                                 # Chains outside map should not exist but just in case
                                 line_split = line.strip()
                                 line_split = line.split()
-                                if line_split[17] in molID_class.chID_newchID_map:
+                                if line_split[6] in molID_class.chID_newchID_map: # FAPA: CHANGING LINE_SPLIT[17] TO 6
                                     # Residues have to be renumbered due to concatenations
-                                    if line_split[17] in molID_class.concat_order:
-                                        residue_offset = (molID_class.concat_order[line_split[17]] - 1) * 1000
+                                    if line_split[6] in molID_class.concat_order:
+                                        residue_offset = (molID_class.concat_order[line_split[6]] - 1) * 50000 # FAPA changed to 50000 from 1000 
                                         new_resinum = int(line_split[15]) + int(residue_offset)
                                         heresthenew_resinum = int(new_resinum)
-                                        newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + molID_class.chID_newchID_map[line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(heresthenew_resinum) + " " + line_split[16] + " " + molID_class.chID_newchID_map[line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
+                                        newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(heresthenew_resinum) + " " + line_split[16] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[18] + " " + line_split[19] + "\n"
                                         newciffile.write(newline)
                                     else:
-                                        newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + molID_class.chID_newchID_map[line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + molID_class.chID_newchID_map[line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
+                                        newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[18] + " " + line_split[19] + "\n"
                                         newciffile.write(newline)
 
                                 else:
