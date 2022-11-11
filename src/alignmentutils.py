@@ -47,7 +47,18 @@ def AlignSequences(sequence_vec):
 
     os.popen('muscle -align Seq.fa -output Seq.afa')
 
-    time.sleep(20) #FAPA
+    #time.sleep(20) #FAPA
+
+    #FAPA START
+    while not os.path.exists(file_name+".afa"):
+        time.sleep(10)
+        print("waiting...")
+
+    while not os.path.getsize(file_name+".afa") > 0:
+        time.sleep(10)
+        print("waiting even more...")
+
+    #FAPA ENDS
 
     aligned_seq = []
     with open("Seq.afa") as seqfile:
@@ -73,7 +84,17 @@ def AlignSequences_v2(sequence_vec, file_name):
             i += 1
     command = "muscle -align "+file_name+".fa -output "+file_name+".afa"
     os.popen(command)
-    time.sleep(1)
+    #FAPA START
+    while not os.path.exists(file_name+".afa"):
+        time.sleep(10)
+        print("waiting...")
+
+    while not os.path.getsize(file_name+".afa") > 0:
+        time.sleep(10)
+        print("waiting even more...")
+
+    #FAPA ENDS
+    #time.sleep(390)
     aligned_seq_map = {}
     aligned_seq = []
     seq = ""
