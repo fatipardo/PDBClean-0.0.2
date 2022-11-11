@@ -657,6 +657,63 @@ def list_accept_concatenations(master_molID_class_list, search_term, new_order=N
 
 #### FAPA TEST ENDS
 
+#### FAPA TEST TWO BEGINS
+
+def list_accept_concatenations_auto(master_molID_class_list, search_term, new_order=None, action='accept'):
+    """
+    edit_concatenation_interface
+    """
+    concat_submenu = 0
+    while(concat_submenu != "QUIT"):
+        search_term = search_term.split(":")
+        #search_term, concat_submenu = get_concat_line_term(concat_submenu)
+        if concat_submenu != "QUIT":
+            found_molID_class_chID_map, molID_class_been_copied = search_chains(master_molID_class_list, search_term)
+        while (concat_submenu != "QUIT"):
+            if(action=='try'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Update new chain ID
+                      """)
+            elif(action=='update'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Update concatenation order
+                      """)
+            elif(action=='accept'):
+                print("""Select one of the following options to proceed:
+                         1) Perform new search
+                         2) Accept planned concatenation
+                      """)
+            #concat_submenu = input('Option Number: ')
+            concat_submenu = "2"
+            if (concat_submenu == "1"):
+                break
+            elif (concat_submenu == "2"):
+                if(action=='try'):
+                    new_order = input('New Chain ID: ')
+                elif(action=='update'):
+                    new_order = input('New concatenation order: ')
+                found_molID_class_chID_map = edit_chain_order(found_molID_class_chID_map, new_order, action=action)
+                if(action=='try'):
+                    print_conflicts(found_molID_class_chID_map)
+                    print("Would you like to accept or deny these changes?")
+                    while (concat_submenu != "QUIT"):
+                        concat_submenu = input('Enter ACCEPT or DENY: ')
+                        if (concat_submenu == "ACCEPT"):
+                            master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
+                        concat_submenu = "QUIT"
+                        concat_menu = ""
+                else:
+                    #print('I AM HERE')
+                    master_molID_class_list = accept_newchain(master_molID_class_list, found_molID_class_chID_map)
+                    #print(master_molID_class_list)
+                    concat_submenu = "QUIT"
+    return master_molID_class_list, new_order
+
+#### FAPA TEST TWO ENDS
+
+
 def get_search_term(value):
     """
     get_search_term
@@ -805,7 +862,7 @@ def masterlist_to_pdb(filelist, masterlist, target_dir=None):
                                 if line_split[6] in molID_class.chID_newchID_map: # FAPA: CHANGING LINE_SPLIT[17] TO 6
                                     # Residues have to be renumbered due to concatenations
                                     if line_split[6] in molID_class.concat_order:
-                                        residue_offset = (molID_class.concat_order[line_split[6]] - 1) * 50000 # FAPA changed to 50000 from 1000 
+                                        residue_offset = (molID_class.concat_order[line_split[6]] - 1) * 50000 # FAPA changed to 50000 from 1000
                                         new_resinum = int(line_split[15]) + int(residue_offset)
                                         heresthenew_resinum = int(new_resinum)
                                         newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(heresthenew_resinum) + " " + line_split[16] + " " + molID_class.chID_newchID_map[line_split[6]] + " " + line_split[18] + " " + line_split[19] + "\n"

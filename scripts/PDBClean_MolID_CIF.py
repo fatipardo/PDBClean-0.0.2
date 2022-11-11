@@ -73,7 +73,7 @@ while(input_menu != "QUIT"):
         molIDConversion_list = molidutils.add_user_conversion(molIDConversion_list)
     elif (input_menu == "4"):
         testX=molIDConversion_list#FAPA
-        #print(testX[0])
+        print(testX[0])
         molIDConversion_list = molidutils.edit_conversion_interface(testX, action='add')#FAPA
     elif (input_menu == "5"):
         molIDConversion_list = molidutils.edit_conversion_manual(molIDConversion_list)
@@ -157,11 +157,14 @@ if (concat_menu == "START"):
                  Note that this will concatenate the entities. So you need to either re-assign chain names,
                  or ACCEPT concatenations.
 
-                 Note: All proposed concatenations must be accepted (by running option 5) before the curation can
+                 Note: All proposed concatenations must be accepted (by running option 5,6 or 6B) before the curation can
                  be completed.
 
                  Before you do anything, we suggest to choose option 2, so you know which concatenations have not
                  been accepted. It will also give you the proper format of the input for options 3-5.
+
+                 If you are sure that all the concatenations are correct. Option 6B will accept all of them. You can master_molID_class_list
+                 see them printed to screen as they are being accepted.
 
                  Select one of the following options to proceed:
                  1) Show all conversions
@@ -171,6 +174,7 @@ if (concat_menu == "START"):
                  5) Search and accept proposed concatenations
                  6) Accept proposed concatenation one by one
                     (Repeat this step until finalizing option appears)
+                 6B) ACCEPT ALL (BE CAREFUL, make sure you agree with all concatenations)
               """)
         if (concat_menu_complete == "1"):
             print("    7) Finalize Curation")
@@ -197,6 +201,13 @@ if (concat_menu == "START"):
             new_order=None
             master_molID_class_list = molidutils.list_accept_concatenations(master_molID_class_list, unassigned_MolID, new_order=new_order, action='accept')[0]
             # Note for tomorrow: here we need to create a new function in molidutils, so we can go over all concatenations!
+        elif (concat_menu == "6B"):
+            allnewchains=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')
+            for newchain in allnewchains:
+                new_order=None
+                master_molID_class_list = molidutils.list_accept_concatenations_auto(master_molID_class_list, newchain, new_order=new_order, action='accept')[0]
+            count_problems = molidutils.problem_counter(master_molID_class_list)
+            print(count_problems)
         elif (concat_menu == "7"):
             print("Finalizing Curation ...")
             molidutils.masterlist_to_pdb(filelist, master_molID_class_list, target_dir=target_dir)
