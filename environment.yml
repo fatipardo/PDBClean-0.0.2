@@ -180,6 +180,7 @@ dependencies:
   - zlib=1.2.12=hfe4f2af_2
   - zstd=1.5.2=ha9df2e0_2
   - pip:
+    - matching==1.4
     - pip==22.1.2
     - pyqt5-sip==12.11.0
 prefix: ~/anaconda3/envs/PDBCleanV2

@@ -45,17 +45,19 @@ def AlignSequences(sequence_vec):
             newfafile.write("> Seq" + "\n")
             newfafile.write(seq + "\n")
 
-    os.popen('muscle -align Seq.fa -output Seq.afa')
+    process=os.popen('muscle -align Seq.fa -output Seq.afa')
 
-    time.sleep(2) #FAPA
+    process
+
+    time.sleep(1) #FAPA
 
     #FAPA START
     while not os.path.exists("Seq.afa"):
-        time.sleep(10)
+        time.sleep(1) #FAPA, WAITING LESS TIME
         print("waiting...")
 
     while not os.path.getsize("Seq.afa") >= os.path.getsize("Seq.fa"):
-        time.sleep(10)
+        time.sleep(1) #FAPA, WAITING LESS TIME
         print("waiting even more...")
 
     #FAPA ENDS
@@ -71,6 +73,8 @@ def AlignSequences(sequence_vec):
             else:
                 seq += line.strip()
         aligned_seq.append(seq)
+
+    process.close()
     return (aligned_seq)
 # END AlignSequences
 
