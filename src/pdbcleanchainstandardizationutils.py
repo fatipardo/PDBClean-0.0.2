@@ -15,6 +15,8 @@ from Bio.Align import MultipleSeqAlignment
 from Bio import pairwise2
 from PDBClean.alignmentutils import *
 from PDBClean.listutils import *
+from matching.games import HospitalResident
+import json
 
 ####################
 # INITIALIZE STEPS #
@@ -92,12 +94,13 @@ def create_standard_seq_from_consensus(Structure_Sequences, Standard_Sequences, 
     input_submenu = ""
     input_submenu_check_1 = ""
     while(input_submenu != "QUIT"):
-        print("    Create Standard Sequences from consensus of input structures.",
+        print("    Generate Standard Sequences based on all the input structures.",
               "    Type QUIT to return to the main menu.",
               "    1) Show list of chain IDs for Standard Sequences",
               "    2) Enter chain IDs to remove from list",
               "    3) Input file with list of chain IDs to remove",
-              "    4) Create Standard Sequences from consensus of input structures",
+              "    4) Generate Standard Sequences based on all input structures",
+              "    5) Load previously generated standard sequences",
               sep="\n")
         input_submenu = input('Option Number: ')
         if (input_submenu == "1"):
@@ -108,7 +111,19 @@ def create_standard_seq_from_consensus(Structure_Sequences, Standard_Sequences, 
             chid_list = remove_file_defined_chain_from_list(chid_list)
         elif (input_submenu == "4"):
             for chid in chid_list:
+                print(chid)
                 Standard_Sequences = assign_standard_from_consensus(Structure_Sequences, Standard_Sequences, chid)
+                print(Standard_Sequences)
+            input_submenu = "QUIT"
+            input_menu_check_1 = "1"
+        elif (input_submenu == "5"):
+            Std_Seq_file = input("File with dictionary of the standard sequences: ")
+            with open(Std_Seq_file) as f:
+                data = f.read()
+            print(type(data))
+            Standard_Sequences = json.loads(data)
+            print(type(Standard_Sequences))
+
             input_submenu = "QUIT"
             input_menu_check_1 = "1"
     return Standard_Sequences, input_menu_check_1
@@ -135,9 +150,9 @@ def review_standard_seq(Structure_Sequences, Standard_Sequences):
             chid= input('Chain ID: ')
             this_chainsseq_list, this_chainsseq_score = get_this_chainsseq_list(Structure_Sequences, chid, verbose=True)
 
-def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list):
+def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, structid_list, filelist, target_dir):
     """
-    align_to_standard_seq
+    align_to_standard_seq and save new files to disk
     """
     ignore_chid = []
     input_submenu= ""
@@ -147,7 +162,7 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
               "    1) Show list of structure chain IDs to ignore when pairwise aligning to the Standard Sequences",
               "    2) Enter chain IDs to add to ignore list",
               "    3) Input file with list of chain IDs to add to ignore list",
-              "    4) Perform pairwise alignments against Standard Sequences and create conversion template",
+              "    4) Perform pairwise alignments against Standard Sequences and rename chains (if needed)",
               sep="\n")
         input_submenu = input('Option Number: ')
         if (input_submenu == "1"):
@@ -162,9 +177,227 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
         elif (input_submenu == "3"):
             input_submenu = input('File: ')
             if (os.path.isfile(input_submenu) == True):
-                my_file = open(input_submenu)
-                for line in my_file:
-                    ignore_chid.append(line.strip())
+                with open(input_submenu) as my_file:
+                #my_file = open(input_submenu)
+                    for line in my_file.readlines():
+                        ignore_chid.append(line.strip())
+            else:
+                print("File does not exist.")
+        elif (input_submenu == "4"):
+            #ChainReassignmentMapping_List = []
+            #ChainReassignmentScores_List = []
+            ref_test_list_list={}
+            #test_list_list={} #so it gets renewed for each sequence
+            #print(Structure_Sequences)
+            counter=0
+
+            #print('ALL STRUCTURE SEQUENCES')
+            #print(Structure_Sequences)
+
+            for chid_seq_map in Structure_Sequences:
+                #print(filelist)
+                ChainReassignmentMapping_List = []
+                ChainReassignmentScores_List = []
+
+                filelist2=[]
+                #print(filelist)
+                filelist2.append(filelist[counter])
+                #print(filelist2)
+
+                print('I am starting to work on:')
+                #print(structid_list[Structure_Sequences.index(chid_seq_map)])
+                print(filelist2)
+                print("this is chid_seq_map and length")
+                print(chid_seq_map)
+                chid_seq_map_len=len(chid_seq_map)
+                print(chid_seq_map_len)
+                Struct_ChainReassignmentMap = {}
+                Struct_ChainReassignmentScores = {}
+                std_chid_list = []
+                chidlist_list = []
+                scorelist_list = []
+                test_list_list= {}
+                TESTchid_score_map = {} #FAPA
+                #print('This is Standard sequences:')
+                #print(Standard_Sequences)
+                for std_chid in Standard_Sequences:
+                    if std_chid not in ignore_chid: # Standard_Sequences is the dictionary with the {chain IDs:sequences} from the reference structure
+                        print("Now I am working on this chain:")
+                        print(std_chid)
+
+                        #print("IGNORE IGNORE IGNORE:")
+                        #print(ignore_chid)
+
+                        std_chid_list.append(std_chid)
+
+                        structchid_score_map = {}
+                        # First, check to see if chid is already correctly assigned
+                    #    print(chid_seq_map)
+                        if std_chid in chid_seq_map:
+                        #if std_chid not in ignore_chid: # FAPA
+                            #print("HERE IS TO SEE IF THIS IS IGNORED: "+std_chid)
+                            aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[std_chid]])
+                            score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                            # If score is perfect, don't bother aligning all chains
+                            #if (score == 1):
+                            if (score >= 0.85): # No need to be so strict, think of possible cases when we would need identical score?
+                                structchid_score_map[std_chid] = score
+                                for struct_chid in chid_seq_map:
+                                    if struct_chid not in ignore_chid:
+                                        if (struct_chid != std_chid):
+                                            structchid_score_map[struct_chid] = 0
+                        # If score is not perfect, align all chains
+                            else:
+                                for struct_chid in chid_seq_map:
+                                    if struct_chid not in ignore_chid:
+                                        aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                        score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                        structchid_score_map[struct_chid] = score
+                    # Chid of standard does not match any structure chid, so perform all alignments
+                        else:
+                            for struct_chid in chid_seq_map:
+                                if struct_chid not in ignore_chid:
+                                #print(ignore_chid)
+                                    aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                    score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                    structchid_score_map[struct_chid] = score
+
+
+                    #if std_chid not in ignore_chid: # we don't want to have any of the ignored chains 0_0
+                        test_list_list[std_chid]= structchid_score_map
+
+                        #print("test_list_list:")
+                        #print(test_list_list)
+                        print("Chains already completed:")
+                        print(std_chid_list)
+
+                ######
+                #  In this section we re-structure the data we collected in previous step. In previous step we filled in a
+                #  "matrix" of chainids and scores. In this section we first create the 'transpose', and then we sort both
+                # dictionaries of chainids by their scores.
+                # This step is necessary to later use the matching algorithm to assign the new chain ids.
+                #
+                ######
+                test_list_list_T = {}
+                for tll_key in test_list_list.keys():
+                    for tll_sub_key in test_list_list[tll_key].keys():
+                        if tll_sub_key not in test_list_list_T:
+                            test_list_list_T[tll_sub_key] = {}
+                        test_list_list_T[tll_sub_key][tll_key] = test_list_list[tll_key][tll_sub_key]
+
+                #print("this is FAPA+HJ test jan 30th")
+                #print(test_list_list_T)
+
+                test_list_list_sortkey2 = {}
+                for tll_key in test_list_list.keys():
+                    test_list_list_sortkey2[tll_key] = sorted(test_list_list[tll_key], key=lambda x:test_list_list[tll_key][x], reverse=True)
+                #print('test_list_list_sortkey2')
+                #print(test_list_list_sortkey2)
+
+
+                test_list_list_T_sortkey = {}
+                for tll_key in test_list_list_T.keys():
+                    test_list_list_T_sortkey[tll_key] = sorted(test_list_list_T[tll_key], key=lambda x:test_list_list_T[tll_key][x], reverse=True)
+                #print('test_list_list_T_sortkey')
+                #print(test_list_list_T_sortkey)
+
+                #print("std_chid_list")
+                #print(len(std_chid_list))
+
+                #print(chid_seq_map_len)
+
+                #print("len test_list_list_sortkey2.keys")
+                #print(list(test_list_list_sortkey2.keys()))
+
+                ########
+                # The following section uses the matching python library to assign the chain IDs. We use the HospitalResident algorithm
+                # We create a capacities variable, that assigns only one chain per hospital.
+                ########
+
+                capacities={}
+                for h in list(test_list_list_sortkey2.keys()):
+                    capacities[h]=1
+
+                game = HospitalResident.create_from_dictionaries(test_list_list_sortkey2, test_list_list_T_sortkey, capacities)
+                solved_game=game.solve()
+
+                output = {}
+                for k in solved_game.keys():
+                    output[str(k)] = str(solved_game[k][0])
+
+                output_scores = {}
+                for k in output.keys():
+                    output_scores[str(k)] = str(test_list_list_T[k][output[k]])
+
+
+                print('Just finished with this structure:')
+                print(filelist2)
+                #print(structid_list[Structure_Sequences.index(chid_seq_map)])
+                print('These are the results:')
+                print(output)
+                print(output_scores)
+
+                ChainReassignmentMapping_List.append(output) # FAPA NEW SCORES
+                ChainReassignmentScores_List.append(output_scores) # FAPA NEW SCORES
+
+                ##
+                # Here is where we start writing the new structures
+                ##
+
+                reassignedmaps_to_pdb(filelist2, ChainReassignmentMapping_List, filelist2, target_dir=target_dir)
+                reassignedmaps_to_log(ChainReassignmentMapping_List, ChainReassignmentScores_List, filelist2, target_dir=target_dir)
+
+                new_pdb_out=target_dir+"/"+(filelist2[0]).split('/')[-1]
+                print("new_pdb_out")
+                print(new_pdb_out)
+
+                while not os.path.exists(new_pdb_out):
+                    time.sleep(1) #FAPA, WAITING LESS TIME
+                    print("waiting...")
+
+                while not os.path.getsize(new_pdb_out) > 0:
+                    time.sleep(1) #FAPA, WAITING LESS TIME
+                    print("waiting even more...")
+
+                counter+=1
+
+                input_menu_check_2 = "1"
+                input_submenu = "QUIT"
+
+
+def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list):
+    """
+    align_to_standard_seq
+    """
+    ignore_chid = []
+    input_submenu= ""
+    input_submenu_4_check_1 = ""
+    while(input_submenu != "QUIT"):
+        print("    Perform pairwise alignments against Standard Sequences. Type QUIT to return to the main menu.",
+              "    1) Show list of structure chain IDs to ignore when pairwise aligning to the Standard Sequences",
+              "    2) Enter chain IDs to add to ignore list",
+              "    3) Input file with list of chain IDs to add to ignore list",
+              "    4) Perform pairwise alignments against Standard Sequences and create conversion template (MAY NEED USER INPUT)",
+              "    5) Perform pairwise alignments against Standard Sequences and AUTOMATICALLY create conversion template",
+              "    6) TESTING",
+              sep="\n")
+        input_submenu = input('Option Number: ')
+        if (input_submenu == "1"):
+            for chid in sorted(ignore_chid):
+                print(chid)
+        elif (input_submenu == "2"):
+            print("    Enter chain ID to add to ignore list. When complete, enter DONE.")
+            while(input_submenu != "DONE"):
+                input_submenu = input('Chain ID: ')
+                if (input_submenu != "DONE"):
+                    ignore_chid.append(input_submenu)
+        elif (input_submenu == "3"):
+            input_submenu = input('File: ')
+            if (os.path.isfile(input_submenu) == True):
+                with open(input_submenu) as my_file:
+                #my_file = open(input_submenu)
+                    for line in my_file.readlines():
+                        ignore_chid.append(line.strip())
             else:
                 print("File does not exist.")
         elif (input_submenu == "4"):
@@ -217,6 +450,14 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                 # These maps are old to new
                 # CHANGES MADE HERE TO MAKE SURE CONFLICTS DO NOT ARRISE BETWEEN UNASSIGNED CHAINIDs and
                 for i in range(len(std_chid_list)):
+                    print("This is the dictionary at beginning of loop:")
+                    print(Struct_ChainReassignmentMap)
+                    print("This chidlist_list[i][0]:")
+                    print(chidlist_list[i][0])
+                    #print("This is Struct_ChainReassignmentMap[chidlist_list[i][0]]:")
+                    #print(Struct_ChainReassignmentMap[chidlist_list[i][0]])
+                    print("This is std_chid_list[i]:")
+                    print(std_chid_list[i])
                     if chidlist_list[i][0] not in Struct_ChainReassignmentMap:
                         Struct_ChainReassignmentMap[chidlist_list[i][0]] = std_chid_list[i]
                         Struct_ChainReassignmentScores[chidlist_list[i][0]] = scorelist_list[i][0]
@@ -230,13 +471,20 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                             if scorelist_list[I][0] in Struct_ChainReassignmentScores:
                                 del Struct_ChainReassignmentScores[chidlist_list[I][0]]
                                 del Struct_ChainReassignmentMap[chidlist_list[I][0]]
+
+                    print("This is the dictionary at end of loop:")
+                    print(Struct_ChainReassignmentMap)
+
                 # Now for final check, make sure no conflicts by checking unused chid
                 # Loop over all chid in the structure
                 unused_chid = []
+                free_chid=[] #FAPA
                 for chid in chid_seq_map:
-                    if chid not in Struct_ChainReassignmentMap:
+                    if chid not in Struct_ChainReassignmentMap.keys():
                         unused_chid.append(chid)
                         # chid is unused . . . will not change. If it is in destination list, then there will be conflict
+                    if chid not in Struct_ChainReassignmentMap.values():
+                        free_chid.append(chid)
                 for chid in unused_chid:
                     used_dest_chid = list(Struct_ChainReassignmentMap.values()) #FAPA
                     if chid in used_dest_chid:
@@ -245,29 +493,300 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                         print("Conflict in structure " + structid_list[II])
                         for old_chid in Struct_ChainReassignmentMap:
                             if (Struct_ChainReassignmentMap[old_chid] == chid):
-                                while (input_submenu != "PASS"):
+                                valid_chid = False #LIV
+                                #while (input_submenu != "PASS"):
+                                while valid_chid == False: #LIV
                                     print("Original chain " + str(old_chid) + " is being reassigned to new chain " + str(chid))
                                     print("This creates a conflict because original chain " + str(chid) + " has not been reassigned.")
                                     print("Where should original chain " + str(chid) + " be reassigned?")
-                                    input_submenu = input('New chain ID: ')
-                                    if (input_submenu not in unused_chid) and (input_submenu not in Struct_ChainReassignmentMap.values()):
+                                    print("You can give a new id or choose from:") #FAPA 011823
+                                    print(free_chid)
+                                    user_input_submenu = input('New chain ID: ') #FAPA
+                                    if (user_input_submenu not in unused_chid) and (user_input_submenu not in Struct_ChainReassignmentMap.values()): #FAPA
                                         # input is a valid destination
-                                        input_submenu = "PASS"
+                                        #input_submenu = "PASS"
+                                        valid_chid = True
                                     else:
                                         print("Not a valid destination chain ID")
                         if (len(input_submenu) <= 2):
-                            Struct_ChainReassignmentMap[chid] = input_submenu
+                            Struct_ChainReassignmentMap[chid] = user_input_submenu
                             Struct_ChainReassignmentScores[chid] = 0
-                            used_dest_chid.append(input_submenu)
+                            used_dest_chid.append(user_input_submenu)
                         else:
-                            Struct_ChainReassignmentMap[chid] = input_submenu[0:2]
+                            Struct_ChainReassignmentMap[chid] = user_input_submenu[0:2]
                             Struct_ChainReassignmentScores[chid] = 0
-                            used_dest_chid.append(input_submenu[0:2])
+                            used_dest_chid.append(user_input_submenu[0:2])
                 ChainReassignmentMapping_List.append(Struct_ChainReassignmentMap)
                 ChainReassignmentScores_List.append(Struct_ChainReassignmentScores)
                 input_menu_check_2 = "1"
                 input_submenu = "QUIT"
+
+#FAPA ADDS A NEW Option
+
+        elif (input_submenu == "5"):
+            ChainReassignmentMapping_List = []
+            ChainReassignmentScores_List = []
+            for chid_seq_map in Structure_Sequences:
+                Struct_ChainReassignmentMap = {}
+                Struct_ChainReassignmentScores = {}
+                std_chid_list = []
+                chidlist_list = []
+                scorelist_list = []
+                for std_chid in Standard_Sequences:
+                    std_chid_list.append(std_chid)
+                    structchid_score_map = {}
+                    # First, check to see if chid is already correctly assigned
+                    if std_chid in chid_seq_map:
+                        aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[std_chid]])
+                        score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                        # If score is perfect, don't bother aligning all chains
+                        if (score == 1):
+                            structchid_score_map[std_chid] = score
+                            for struct_chid in chid_seq_map:
+                                if (struct_chid != std_chid):
+                                    structchid_score_map[struct_chid] = 0
+                        # If score is not perfect, align all chains
+                        else:
+                            for struct_chid in chid_seq_map:
+                                if struct_chid not in ignore_chid:
+                                    aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                    score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                    structchid_score_map[struct_chid] = score
+                    # Chid of standard does not match any structure chid, so perform all alignments
+                    else:
+                        for struct_chid in chid_seq_map:
+                            if struct_chid not in ignore_chid:
+                                aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                structchid_score_map[struct_chid] = score
+                    scorelist_list.append(list(reversed(sorted(structchid_score_map.values()))))
+                    chidlist_list.append(list(reversed(sorted(structchid_score_map, key=structchid_score_map.get))))
+                # Relevant information to create chain reassingment map has now been gathered from each structure via alignment
+                # std_chid_list, chidlist_list and scorelist_list have the same indexes
+                # At a given location i, std_chid_list[i] is the standard_sequence chid,
+                # chidlist_list[i] is the list of chain ids in the given structure aligned to that standard sequence
+                # and, scorelist_list[i] is the list of corresponding scores of that alignment
+                # Note that there is no reason to keep all scores of all chids instead of just the top
+                # scoring one, however, it's done because it seems likely that information may
+                # be valuable and worth incorporating later on
+                # Construct the map, making sure to avoid conflicts by comparing scores
+                # These maps are old to new
+                # CHANGES MADE HERE TO MAKE SURE CONFLICTS DO NOT ARRISE BETWEEN UNASSIGNED CHAINIDs and
+                for i in range(len(std_chid_list)):
+                    print("This is the dictionary at beginning of loop:")
+                    print(Struct_ChainReassignmentMap)
+                    print("This chidlist_list[i][0]:")
+                    print(chidlist_list[i][0])
+                    #print("This is Struct_ChainReassignmentMap[chidlist_list[i][0]]:")
+                    #print(Struct_ChainReassignmentMap[chidlist_list[i][0]])
+                    print("This is std_chid_list[i]:")
+                    print(std_chid_list[i])
+                    if chidlist_list[i][0] not in Struct_ChainReassignmentMap:
+                        Struct_ChainReassignmentMap[chidlist_list[i][0]] = std_chid_list[i]
+                        Struct_ChainReassignmentScores[chidlist_list[i][0]] = scorelist_list[i][0]
+                    else:
+                        # I < i
+                        I = std_chid_list.index(Struct_ChainReassignmentMap[chidlist_list[i][0]])
+                        # Compare score of original and new entry. If new entry has better score, replace
+                        if(scorelist_list[i][0] > scorelist_list[I][0]):
+                            Struct_ChainReassignmentMap[chidlist_list[i][0]] = std_chid_list[i]
+                            Struct_ChainReassignmentScores[chidlist_list[i][0]] = scorelist_list[i][0]
+                            if scorelist_list[I][0] in Struct_ChainReassignmentScores:
+                                del Struct_ChainReassignmentScores[chidlist_list[I][0]]
+                                del Struct_ChainReassignmentMap[chidlist_list[I][0]]
+
+                    print("This is the dictionary at end of loop:")
+                    print(Struct_ChainReassignmentMap)
+
+                # Now for final check, make sure no conflicts by checking unused chid
+                # Loop over all chid in the structure
+                unused_chid = []
+                free_chid=[] #FAPA
+                counter=0 #FAPA
+                for chid in chid_seq_map:
+                    if chid not in Struct_ChainReassignmentMap.keys():
+                        unused_chid.append(chid)
+                        # chid is unused . . . will not change. If it is in destination list, then there will be conflict
+                    if chid not in Struct_ChainReassignmentMap.values():
+                        free_chid.append(chid)
+                for chid in unused_chid:
+                    used_dest_chid = list(Struct_ChainReassignmentMap.values()) #FAPA
+                    if chid in used_dest_chid:
+                        # chid is unused and a destination so a conflict exists and needs to be given destination
+                        II = Structure_Sequences.index(chid_seq_map)
+                        print("Conflict in structure " + structid_list[II])
+                        for old_chid in Struct_ChainReassignmentMap:
+                            if (Struct_ChainReassignmentMap[old_chid] == chid):
+                                #user_input_submenu = "Z" + str(counter)
+                                user_input_submenu = free_chid[counter]
+                                counter+=1
+
+                        Struct_ChainReassignmentMap[chid] = user_input_submenu
+                        Struct_ChainReassignmentScores[chid] = 0
+                        used_dest_chid.append(user_input_submenu)
+
+                ChainReassignmentMapping_List.append(Struct_ChainReassignmentMap)
+                ChainReassignmentScores_List.append(Struct_ChainReassignmentScores)
+                input_menu_check_2 = "1"
+                input_submenu = "QUIT"
+
+#FAPA FINISHES ADDING NEW OPTION
+
+#FAPA ADDS OPTION 6
+
+        elif (input_submenu == "6"):
+            ChainReassignmentMapping_List = []
+            ChainReassignmentScores_List = []
+            ref_test_list_list={}
+            #test_list_list={} #so it gets renewed for each sequence
+            #print(Structure_Sequences)
+            for chid_seq_map in Structure_Sequences:
+                print('I am starting to work on:')
+                print(structid_list[Structure_Sequences.index(chid_seq_map)])
+                print("this is chid_seq_map and length")
+                print(chid_seq_map)
+                chid_seq_map_len=len(chid_seq_map)
+                print(chid_seq_map_len)
+                Struct_ChainReassignmentMap = {}
+                Struct_ChainReassignmentScores = {}
+                std_chid_list = []
+                chidlist_list = []
+                scorelist_list = []
+                test_list_list= {}
+                TESTchid_score_map = {} #FAPA
+                #print('This is Standard sequences:')
+                #print(Standard_Sequences)
+                for std_chid in Standard_Sequences:
+                    if std_chid not in ignore_chid: # Standard_Sequences is the dictionary with the {chain IDs:sequences} from the reference structure
+                        print("this is std_chid:")
+                        print(std_chid)
+
+                        print("IGNORE IGNORE IGNORE:")
+                        print(ignore_chid)
+
+                        std_chid_list.append(std_chid)
+
+                        structchid_score_map = {}
+                        # First, check to see if chid is already correctly assigned
+                    #    print(chid_seq_map)
+                        if std_chid in chid_seq_map:
+                        #if std_chid not in ignore_chid: # FAPA
+                            #print("HERE IS TO SEE IF THIS IS IGNORED: "+std_chid)
+                            aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[std_chid]])
+                            score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                            # If score is perfect, don't bother aligning all chains
+                            #if (score == 1):
+                            if (score >= 0.85): # No need to be so strict, think of possible cases when we would need identical score?
+                                structchid_score_map[std_chid] = score
+                                for struct_chid in chid_seq_map:
+                                    if struct_chid not in ignore_chid:
+                                        if (struct_chid != std_chid):
+                                            structchid_score_map[struct_chid] = 0
+                        # If score is not perfect, align all chains
+                            else:
+                                for struct_chid in chid_seq_map:
+                                    if struct_chid not in ignore_chid:
+                                        aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                        score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                        structchid_score_map[struct_chid] = score
+                    # Chid of standard does not match any structure chid, so perform all alignments
+                        else:
+                            for struct_chid in chid_seq_map:
+                                if struct_chid not in ignore_chid:
+                                #print(ignore_chid)
+                                    aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
+                                    score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
+                                    structchid_score_map[struct_chid] = score
+
+
+                    #if std_chid not in ignore_chid: # we don't want to have any of the ignored chains 0_0
+                        test_list_list[std_chid]= structchid_score_map
+
+                        print("test_list_list:")
+                        print(test_list_list)
+                        print("std_chid_list:")
+                        print(std_chid_list)
+
+
+
+                ######
+                #  In this section we re-structure the data we collected in previous step. In previous step we filled in a
+                #  "matrix" of chainids and scores. In this section we first create the 'transpose', and then we sort both
+                # dictionaries of chainids by their scores.
+                # This step is necessary to later use the matching algorithm to assign the new chain ids.
+                #
+                ######
+                test_list_list_T = {}
+                for tll_key in test_list_list.keys():
+                    for tll_sub_key in test_list_list[tll_key].keys():
+                        if tll_sub_key not in test_list_list_T:
+                            test_list_list_T[tll_sub_key] = {}
+                        test_list_list_T[tll_sub_key][tll_key] = test_list_list[tll_key][tll_sub_key]
+
+                #print("this is FAPA+HJ test jan 30th")
+                #print(test_list_list_T)
+
+                test_list_list_sortkey2 = {}
+                for tll_key in test_list_list.keys():
+                    test_list_list_sortkey2[tll_key] = sorted(test_list_list[tll_key], key=lambda x:test_list_list[tll_key][x], reverse=True)
+                print('test_list_list_sortkey2')
+                print(test_list_list_sortkey2)
+
+
+                test_list_list_T_sortkey = {}
+                for tll_key in test_list_list_T.keys():
+                    test_list_list_T_sortkey[tll_key] = sorted(test_list_list_T[tll_key], key=lambda x:test_list_list_T[tll_key][x], reverse=True)
+                print('test_list_list_T_sortkey')
+                print(test_list_list_T_sortkey)
+
+                print("std_chid_list")
+                print(len(std_chid_list))
+
+                print(chid_seq_map_len)
+
+                print("len test_list_list_sortkey2.keys")
+                print(list(test_list_list_sortkey2.keys()))
+
+                ########
+                # The following section uses the matching python library to assign the chain IDs. We use the HospitalResident algorithm
+                # We create a capacities variable, that assigns only one chain per hospital.
+                ########
+
+                capacities={}
+                for h in list(test_list_list_sortkey2.keys()):
+                    capacities[h]=1
+
+                game = HospitalResident.create_from_dictionaries(test_list_list_sortkey2, test_list_list_T_sortkey, capacities)
+                solved_game=game.solve()
+
+                output = {}
+                for k in solved_game.keys():
+                        #print(str(k), str(testing[k]))
+                    output[str(k)] = str(solved_game[k][0])
+
+                output_scores = {}
+                for k in output.keys():
+                    output_scores[str(k)] = str(test_list_list_T[k][output[k]])
+
+
+                print("Just finished with this structure:")
+                print(structid_list[Structure_Sequences.index(chid_seq_map)])
+                print('These are the results:')
+                print(output)
+                print(output_scores)
+
+                #ChainReassignmentMapping_List.append(Struct_ChainReassignmentMap)
+                ChainReassignmentMapping_List.append(output) # FAPA NEW SCORES
+                #ChainReassignmentScores_List.append(Struct_ChainReassignmentScores)
+                ChainReassignmentScores_List.append(output_scores) # FAPA NEW SCORES
+                input_menu_check_2 = "1"
+                input_submenu = "QUIT"
+
+#END OPTION 6
+
+    print(ChainReassignmentMapping_List, ChainReassignmentScores_List)
     return ChainReassignmentMapping_List, ChainReassignmentScores_List, input_menu_check_2
+
 
 def assign_standard_from_consensus(Structure_Sequences, Standard_Sequences, chid):
     """
@@ -286,7 +805,7 @@ def assign_standard_from_consensus(Structure_Sequences, Standard_Sequences, chid
             break
     return Standard_Sequences
 
-def get_this_chainsseq_list(Structure_Sequences, chid, verbose=False):
+def get_this_chainsseq_list(Structure_Sequences, chid, verbose=True):
     """
     """
     this_chainsseq_list = []
@@ -301,6 +820,10 @@ def get_this_chainsseq_list(Structure_Sequences, chid, verbose=False):
     this_chainsseq_score = {}
     # Initialize scores
     this_chainsseq_set = set(this_chainsseq_list)
+
+    print("this_chansseq_set")
+    print(this_chainsseq_set)
+
     for seq in this_chainsseq_set:
         this_chainsseq_score[seq] = 0
     # For each unique seq, count number of times in list
@@ -310,6 +833,9 @@ def get_this_chainsseq_list(Structure_Sequences, chid, verbose=False):
     this_chainsseq_list = sorted(list(this_chainsseq_set))
     this_chainsseq_list.sort(key=len)
     this_chainsseq_list.reverse()
+
+    print("this is after finding uniques:")
+    print(this_chainsseq_list)
     # Determine containedness of a sequence within a longer sequence
     for i in range(len(this_chainsseq_list)):
         for j in range(len(this_chainsseq_list)-i-1):
@@ -387,32 +913,40 @@ def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list
     """
     reassignmedmaps_to_pdb
     """
+    print("structid_list")
+    print(structid_list)
+
     for my_files in filelist:
         newciffilename=target_dir+'/'+my_files.split('/')[-1]
         with open(my_files) as myfile:
+            print("my file name")
+            print(myfile.name)
             with open(newciffilename, 'w') as newciffile:
                 # Now figure out which file is which template
-                    I = structid_list.index(myfile.name)
-                    for line in myfile:
-                        if (line[0:4] == "ATOM"):
+                I = structid_list.index(myfile.name)
+                for line in myfile:
+                    if (line[0:4] == "ATOM"):
                             # Chains outside map should not exist but just in case
-                            line_split = line.strip()
-                            line_split = line.split()
-                            if line_split[17] in ChainReassignmentMapping_List[I]:
-                                newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n" #FAPA TEST 
+                        line_split = line.strip()
+                        line_split = line.split()
+                            #print(I) #FAPA
+                            #print(ChainReassignmentMapping_List[I]) #FAPA
+                            #print(line_split[17]) #FAPA
+                        if line_split[17] in ChainReassignmentMapping_List[I]:
+                            newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n" #FAPA TEST
                                 #newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
-                                newciffile.write(newline)
-                            else:
-                                newciffile.write(line)
+                            newciffile.write(newline)
                         else:
                             newciffile.write(line)
+                    else:
+                        newciffile.write(line)
 
 def reassignedmaps_to_log(ChainReassignmentMapping_List, ChainReassignmentScores_List, structid_list, target_dir=None, verbose=True):
     """
     reassignedmaps_to_log
     """
     logfilename=target_dir+'/ChainStandardizationRecord.txt'
-    with open(logfilename, 'w') as recordfile:
+    with open(logfilename, 'a') as recordfile:
         for I in range(len(structid_list)):
             for chid in ChainReassignmentMapping_List[I]:
                 recordfile.write(structid_list[I] + ":" + chid + ":" + ChainReassignmentMapping_List[I][chid] + ":" + str(ChainReassignmentScores_List[I][chid]) + "\n")
