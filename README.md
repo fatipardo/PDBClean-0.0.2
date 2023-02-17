@@ -27,7 +27,13 @@ Same as Step 2.1, but in our example, we give the same MOL ID to different entit
 
 ### [Step 3. Chain ID standardization](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step3.ChainIDStandardization.ipynb)
 
-Step 3 allows us to name each entity with whatever name we want. Step 3 makes sure that the chains that are the same (we do sequence alignment to determine similarity) in different CIF files, have a consistent name.
+Step 3 allows us to name each entity with whatever name we want. Step 3 makes sure that the chains that are the same (we do sequence alignment to determine similarity) in different CIF files, have a consistent name. Sometimes entities/chains are mislabeled in deposited structures, this step is recommended to identify any such cases. This step can also be used to identify any possible outlier, by seeing how all chains score compared to our reference. 
+
+We divide the tutorial for this step in two parts. The second part shows how to generate the reference sequences, as well as showing how to load them when running the script. Doing this could also help speed up this step, as it allows to run the script in parallel in batches. This is particularly important when working with large datasets, or with molecules with many chains. 
+
+### [Step 3.2 Chain ID standardization: generate reference sequences and how to load them](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step3.2.ChainIDStandardization.ipynb)
+
+In this tutorial, we show how the reference sequence is selected by our script, and show how the user can modify it. It also shows how to load the reference sequences, creating the opportunity for running this step in parallel, in batches, speeding up the whole process. 
 
 ### [Step 4. Residue ID Standardization](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step4.ResidueIDStandardization.ipynb)
 
@@ -36,7 +42,7 @@ Following step 3, now that we have consistent chain (entity) naming among all st
 This is also the last step! You have a curated dataset!
 
 
-> **Note:** There are more advanced curation steps and analysis that we will cover in future notebooks.
+> **Note:** There are more advanced curation steps and analysis that we will cover in future releases.
 
 ### [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb)
 
@@ -44,7 +50,7 @@ This mini tutorial can be run after doing step 2. It shows you how our check_pro
 
 # Installation
 
-We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean. You will need to link muscle to your virtual environment, just follow the instructions we provide.
+We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean, and we provide our tutorial as jupyter notebooks. 
 We have tested the installation on MacOS.
 
 1. Download PDBClean from GitHub and install environment from YML file
