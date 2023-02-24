@@ -1,4 +1,5 @@
-# PDBCleanV2 : A Python Library for Creating Self-Consistent Structure Datasets.
+# PDBCleanV2 
+## A Python Library for Creating Self-Consistent Structure Datasets.
 
 With PDBCleanV2, users can create their own self-consistent structure dataset, enabling more straightforward comparison among structures. The library creates separate files for each biological assembly present in a structure file and standardizes chain names and numbering. Our goal is to provide researchers with a consistent dataset that facilitates their analysis.
 
