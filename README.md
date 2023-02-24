@@ -4,10 +4,10 @@ With PDBCleanV2, users can create their own self-consistent structure dataset, e
 
 ## Table of contents
 
-* [PDBCleanV2 workflow and tutorials](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#pdbcleanv2-workflow)
-* [Other tools](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#other-tools)
-* [Installation](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#installation)
-* [PDBClean team](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#pdbclean-team)
+* [PDBCleanV2 workflow and tutorial](#pdbcleanv2-workflow)
+* [Other tools](#other-tools)
+* [Installation](#installation)
+* [PDBClean team](#pdbclean-team)
 
 ## PDBCleanV2 Workflow
 
