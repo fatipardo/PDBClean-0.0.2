@@ -1,16 +1,16 @@
-# PDBClean-0.0.2
+# PDBCleanV2 : A Python Library for Creating Self-Consistent Structure Datasets.
 
-PDBClean allows you to create a curated ensemble of structures deposited in the Protein Data Bank.
+With PDBCleanV2, users can create their own self-consistent structure dataset, enabling more straightforward comparison among structures. The library creates separate files for each biological assembly present in a structure file and standardizes chain names and numbering. Our goal is to provide researchers with a consistent dataset that facilitates their analysis.
 
-# What does PDBClean actually do?
+# PDBCleanV2 workflow
 
-We have created Jupyter Notebooks to show how to create a curated ensemble of structures using PDBClean.
+We have created Jupyter Notebooks that provide a step-by-step guide for creating a curated ensemble of structures using PDBCleanV2. 
 
 ### [Step 0. Download structural ensemble form RCSB PDB.](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step0.DownloadStructuralEnsembleFromRCSBPDB.ipynb)
 
 Download all structures that match the name and sequence of your molecule of interest.
 
-> **Note:** This notebook does not display on the Github website, download and open in your browser.   
+> **Note:** This notebook sometimes does not display on the Github website, download and open in your browser.   
 
 ### [Step 1. Clean Structures and Create one CIF file per biological assembly.](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step1.CreateOneCIFFilePerBiologicalAssembly.ipynb)
 
@@ -44,9 +44,11 @@ This is also the last step! You have a curated dataset!
 
 > **Note:** There are more advanced curation steps and analysis that we will cover in future releases.
 
-### [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb)
+### Other tools
 
-This mini tutorial can be run after doing step 2. It shows you how our check_project tool works.
+[Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb)
+
+This mini tutorial can be run after doing step 2. `Check_project` checks if a directory has been created, if not it creates the directory and an info.txt file with the creation date. 
 
 # Installation
 
