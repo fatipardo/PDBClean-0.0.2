@@ -2,7 +2,14 @@
 
 With PDBCleanV2, users can create their own self-consistent structure dataset, enabling more straightforward comparison among structures. The library creates separate files for each biological assembly present in a structure file and standardizes chain names and numbering. Our goal is to provide researchers with a consistent dataset that facilitates their analysis.
 
-# PDBCleanV2 workflow
+## Table of contents
+
+* [PDBCleanV2 Workflow](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#pdbcleanv2-workflow)
+* [Other tools](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#other-tools)
+* [Installation](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#installation)
+* [PDBClean team](https://github.com/fatipardo/PDBClean-0.0.2/tree/modify_readme#pdbclean-team)
+
+## PDBCleanV2 Workflow
 
 We have created Jupyter Notebooks that provide a step-by-step guide for creating a curated ensemble of structures using PDBCleanV2. 
 
@@ -44,11 +51,11 @@ This is also the last step! You have a curated dataset!
 
 > **Note:** There are more advanced curation steps and analysis that we will cover in future releases.
 
-# Other tools
+## Other tools
 
 [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb). This mini tutorial can be run after doing step 2. `Check_project` checks if a directory has been created, if not it creates the directory and an info.txt file with the creation date. 
 
-# Installation
+## Installation
 
 We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean, and we provide our tutorial as jupyter notebooks. 
 We have tested the installation on MacOS.
