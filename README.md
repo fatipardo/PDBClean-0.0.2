@@ -13,6 +13,8 @@ With PDBCleanV2, users can create their own self-consistent structure dataset, e
 
 We have created Jupyter Notebooks that provide a step-by-step guide for creating a curated ensemble of structures using PDBCleanV2. 
 
+![flowchart of workflow](./images/FlowChart.png)
+
 ### [Step 0. Download structural ensemble form RCSB PDB.](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Step0.DownloadStructuralEnsembleFromRCSBPDB.ipynb)
 
 Download all structures that match the name and sequence of your molecule of interest.
