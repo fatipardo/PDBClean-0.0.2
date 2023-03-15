@@ -87,7 +87,11 @@ def AlignSequences_v2(sequence_vec, file_name):
             newfafile.write(seq + "\n")
             i += 1
     command = "muscle -align "+file_name+".fa -output "+file_name+".afa"
-    os.popen(command)
+
+    process = os.popen(command)
+
+    process
+
     #FAPA START
     while not os.path.exists(file_name+".afa"):
         time.sleep(10)
@@ -121,6 +125,8 @@ def AlignSequences_v2(sequence_vec, file_name):
         aligned_seq_map[key] = seq
     for i in range(len(aligned_seq_map)):
         aligned_seq.append(aligned_seq_map[str(i)])
+
+    process.close()
     return (aligned_seq)
 # END AlignSequences
 
