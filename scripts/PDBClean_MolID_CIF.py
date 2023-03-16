@@ -148,7 +148,7 @@ if (concat_menu == "START"):
         if (concat_menu_complete == "1"):
             print("""Congratulations! You have successfully constructed your
                      conversion templates.You can proceed to the next section
-                     by selection option 7 or, continue to edit your conversion
+                     by selection option 6 or, continue to edit your conversion
                      template through this menu
                   """)
         print("""PDBClean Concatenations Menu
@@ -157,27 +157,25 @@ if (concat_menu == "START"):
                  Note that this will concatenate the entities. So you need to either re-assign chain names,
                  or ACCEPT concatenations.
 
-                 Note: All proposed concatenations must be accepted (by running option 5,6 or 6B) before the curation can
+                 Note: All proposed concatenations must be accepted (by running option 4 or 5) before the curation can
                  be completed.
 
                  Before you do anything, we suggest to choose option 2, so you know which concatenations have not
-                 been accepted. It will also give you the proper format of the input for options 3-5.
+                 been accepted. It will also give you the proper format of the input for option 3.
 
-                 If you are sure that all the concatenations are correct. Option 6B will accept all of them. You can master_molID_class_list
-                 see them printed to screen as they are being accepted.
+                 If you are sure that all the concatenations are correct. Option 5 will accept all of them. They 
+                 will be printed to screen as they are being accepted. 
 
                  Select one of the following options to proceed:
                  1) Show all conversions
                  2) Show only unaccepted concatenations
                  3) Search and modify destination chainIDs of proposed concatenations
-                 4) Search and modify order of proposed concatenations
-                 5) Search and accept proposed concatenations
-                 6) Accept proposed concatenation one by one
+                 4) Accept proposed concatenation one by one
                     (Repeat this step until finalizing option appears)
-                 6B) ACCEPT ALL (BE CAREFUL, make sure you agree with all concatenations)
+                 5) Accept ALL (BE CAREFUL, make sure you agree with all concatenations)
               """)
         if (concat_menu_complete == "1"):
-            print("    7) Finalize Curation")
+            print("    6) Finalize Curation")
 
         concat_menu = input('Option Number: ')
 
@@ -188,27 +186,20 @@ if (concat_menu == "START"):
         elif (concat_menu == "3"):
             master_molID_class_list = molidutils.edit_concatenation_interface(master_molID_class_list, action='try')[0]
         elif (concat_menu == "4"):
-            master_molID_class_list, new_order = molidutils.edit_concatenation_interface(master_molID_class_list, action='update')
-        elif (concat_menu == "5"):
-            print("These are the assignments you need to approve:\n")
-            molidutils.show_unassigned_conversion(master_molID_class_list, step='concatenation')
-            new_order=None
-            master_molID_class_list = molidutils.edit_concatenation_interface(master_molID_class_list, new_order=new_order, action='accept')[0]
-        elif (concat_menu == "6"):
             unassigned_MolID=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')[0]
             print("This is the concatenation you need to accept:")
             #print(unassigned_MolID)
             new_order=None
             master_molID_class_list = molidutils.list_accept_concatenations(master_molID_class_list, unassigned_MolID, new_order=new_order, action='accept')[0]
             # Note for tomorrow: here we need to create a new function in molidutils, so we can go over all concatenations!
-        elif (concat_menu == "6B"):
+        elif (concat_menu == "5"):
             allnewchains=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')
             for newchain in allnewchains:
                 new_order=None
                 master_molID_class_list = molidutils.list_accept_concatenations_auto(master_molID_class_list, newchain, new_order=new_order, action='accept')[0]
             count_problems = molidutils.problem_counter(master_molID_class_list)
             print(count_problems)
-        elif (concat_menu == "7"):
+        elif (concat_menu == "6"):
             print("Finalizing Curation ...")
             molidutils.masterlist_to_pdb(filelist, master_molID_class_list, target_dir=target_dir)
             concat_menu = "QUIT"
