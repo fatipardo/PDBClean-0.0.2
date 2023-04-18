@@ -78,26 +78,27 @@ def AlignSequences(sequence_vec):
     return (aligned_seq)
 # END AlignSequences
 
-def AlignSequences_v2(sequence_vec, file_name):
+def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
     # Takes a list of sequence strings and performs a MUSCLE alignment, outputting a vector of aligned sequence strings
     with open(file_name+".fa", 'w') as newfafile:
         i = 0
         for seq in sequence_vec:
-            newfafile.write("> Seq " + str(i)+ "\n")
+            #newfafile.write("> Seq " + str(i)+ "\n")
+            newfafile.write("> Seq " + str(this_chainsseq_list_ids[i]) + "\n")
             newfafile.write(seq + "\n")
             i += 1
-    command = "muscle -align "+file_name+".fa -output "+file_name+".afa"
+    command = "muscle -align "+file_name+".fa -output "+file_name+".fasta"
 
     process = os.popen(command)
 
     process
 
     #FAPA START
-    while not os.path.exists(file_name+".afa"):
+    while not os.path.exists(file_name+".fasta"):
         time.sleep(10)
         print("waiting...")
 
-    while not os.path.getsize(file_name+".afa") > 0:
+    while not os.path.getsize(file_name+".fasta") > 0:
         time.sleep(10)
         print("waiting even more...")
 
@@ -106,7 +107,7 @@ def AlignSequences_v2(sequence_vec, file_name):
     aligned_seq_map = {}
     aligned_seq = []
     seq = ""
-    with open(file_name + ".afa") as seqfile:
+    with open(file_name + ".fasta") as seqfile:
         for line in seqfile:
             if (line[0] == ">"):
                 # Very first line

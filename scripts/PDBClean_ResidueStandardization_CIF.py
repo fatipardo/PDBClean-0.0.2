@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/Users/fatima/anaconda3/envs/PDBCleanV2/bin/python
 # coding: utf-8
 
 from __future__ import print_function
