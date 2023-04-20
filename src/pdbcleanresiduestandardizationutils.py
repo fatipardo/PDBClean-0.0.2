@@ -74,12 +74,14 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
         elif (input_submenu == "4"):
             for chid in chid_list:
                 this_chainsseq_list = []
+                this_chainsseq_list_ids = [] #FAPA
                 this_chainsseq_aligned_list = []
                 for I in range(len(structid_list)):
                     key = str(structid_list[I]) + "_" + chid
                     if key in Structure_Sequences:
                         this_chainsseq_list.append(Structure_Sequences[key])
-                this_chainsseq_aligned_list = AlignSequences_v2(this_chainsseq_list, chid)
+                        this_chainsseq_list_ids.append(structid_list[I]) # FAPA
+                this_chainsseq_aligned_list = AlignSequences_v2(this_chainsseq_list, chid,this_chainsseq_list_ids )
                 i = 0
                 for I in range(len(structid_list)):
                     key = str(structid_list[I]) + "_" + chid
