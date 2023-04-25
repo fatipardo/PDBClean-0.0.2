@@ -95,8 +95,6 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
                     resinum_aligned_list = []
                     key = str(structid_list[I]) + "_" + str(chain)
                     if key in Structure_Sequences_Aligned:
-                        print(key)
-                        print(Structure_Sequences_Aligned[key])
                         seq = Structure_Sequences_Aligned[key]
                         i = 0
                         for resn in seq:
@@ -104,11 +102,8 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
                             if (resn != "-"):
                                 resinum_aligned_list.append(i)
                         i = 0
-                        print(resinum_aligned_list)
                         for residue in ChID_ResiNum_Vector[I][chain]:
                             key2 = chain + "_" + str(residue)
-                            print(key2)
-                            print(resinum_aligned_list[i])
                             conversion_template[key2] = resinum_aligned_list[i]
                             i += 1
                 Structure_ConversionTemplate[structid_list[I]] = conversion_template
