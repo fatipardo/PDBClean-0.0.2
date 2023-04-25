@@ -124,11 +124,15 @@ def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
             else:
                 seq += line.strip()
         aligned_seq_map[key] = seq
-    for i in range(len(aligned_seq_map)):
-        aligned_seq.append(aligned_seq_map[str(i)])
+
+    #for i in range(len(aligned_seq_map)):
+    #    aligned_seq.append(aligned_seq_map[str(i)])
+    for item in (aligned_seq_map.keys()):
+        print(item)
+        aligned_seq.append(aligned_seq_map[item])
 
     process.close()
-    return (aligned_seq)
+    return (aligned_seq_map)
 # END AlignSequences
 
 
