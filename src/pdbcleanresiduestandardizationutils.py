@@ -81,12 +81,13 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
                     if key in Structure_Sequences:
                         this_chainsseq_list.append(Structure_Sequences[key])
                         this_chainsseq_list_ids.append(structid_list[I]) # FAPA
-                this_chainsseq_aligned_list = AlignSequences_v2(this_chainsseq_list, chid,this_chainsseq_list_ids )
+                this_chainsseq_aligned_list_map = AlignSequences_v2(this_chainsseq_list, chid,this_chainsseq_list_ids )
                 i = 0
                 for I in range(len(structid_list)):
                     key = str(structid_list[I]) + "_" + chid
                     if key in Structure_Sequences:
-                        Structure_Sequences_Aligned[key] = this_chainsseq_aligned_list[i]
+                        #Structure_Sequences_Aligned[key] = this_chainsseq_aligned_list[i]
+                        Structure_Sequences_Aligned[key] = this_chainsseq_aligned_list_map[str(structid_list[I])]
                         i += 1
             for I in range(len(structid_list)):
                 conversion_template = {}
@@ -94,6 +95,8 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
                     resinum_aligned_list = []
                     key = str(structid_list[I]) + "_" + str(chain)
                     if key in Structure_Sequences_Aligned:
+                        print(key)
+                        print(Structure_Sequences_Aligned[key])
                         seq = Structure_Sequences_Aligned[key]
                         i = 0
                         for resn in seq:
@@ -101,8 +104,11 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
                             if (resn != "-"):
                                 resinum_aligned_list.append(i)
                         i = 0
+                        print(resinum_aligned_list)
                         for residue in ChID_ResiNum_Vector[I][chain]:
                             key2 = chain + "_" + str(residue)
+                            print(key2)
+                            print(resinum_aligned_list[i])
                             conversion_template[key2] = resinum_aligned_list[i]
                             i += 1
                 Structure_ConversionTemplate[structid_list[I]] = conversion_template
