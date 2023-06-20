@@ -57,6 +57,9 @@ This is also the last step! You have a curated dataset!
 
 [Check project mini tutorial](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/CheckProject_CheckCreateDelete.ipynb). This mini tutorial can be run after doing step 2. `Check_project` checks if a directory has been created, if not it creates the directory and an info.txt file with the creation date. 
 
+[Dataset Summary](https://github.com/fatipardo/PDBClean-0.0.2/blob/master/Notebooks/Analysis.SummaryPDBDataset.ipynb).
+This notebook can be run after doing step 0. It creates plots that summarize important information from your dataset such as organism of origin, resolution, year, and method used to solve the structure. The notebook also creates a pandas dataframe so users can create their own personalized plots.
+
 ## Installation
 
 We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean, and we provide our tutorial as jupyter notebooks. 
