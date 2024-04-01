@@ -32,7 +32,8 @@ filelist=glob.glob(source_dir+'/*.cif')
 master_molID_class_list = molidutils.pdb_to_masterlist(filelist)
 unique_molID_occur_map  = molidutils.CreateMasterUniqueMolIDMap(master_molID_class_list)
 molIDConversion_list    = molidutils.uniquelist_to_conversionlist(unique_molID_occur_map)
-
+#FAPA MARCH 2024
+MolID_to_files_map = molidutils.CreateMasterUniqueMolIDMapWithFileName(master_molID_class_list)
 
 #####################################
 # INTERACTIVE MOLID CONVERSION MENU #
@@ -61,6 +62,7 @@ while(input_menu != "QUIT"):
              4) Search MolID to add chain ID conversion
              5) Go entry by entry to add chain ID conversion
              6) Remove a chain ID conversion
+             A) Print entity:file_name list
           """)
     if (input_menu_complete == "1"):
         print("    7) Continue to next step of curation")
@@ -79,6 +81,8 @@ while(input_menu != "QUIT"):
         molIDConversion_list = molidutils.edit_conversion_manual(molIDConversion_list)
     elif (input_menu == "6"):
         molIDConversion_list = molidutils.edit_conversion_interface(molIDConversion_list, action='remove')
+    elif (input_menu == "A"):
+        molidutils.Print_MolID_To_Files_Map(MolID_to_files_map,target_dir)
     elif (input_menu == "7"):
         if (input_menu_complete == "1"):
             master_molID_class_list = molidutils.update_masterlist(master_molID_class_list, molIDConversion_list)

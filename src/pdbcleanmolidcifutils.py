@@ -270,7 +270,7 @@ def add_chID_list(MolIDConversion, chID_list):
 #
 
 # Compile information from each file to create a master map of molID to max
-# number of occurances
+# number of occurrences
 def CreateMasterUniqueMolIDMap(molID_class_list):
     unique_molID_map = {}
     for my_molID_class in molID_class_list:
@@ -282,6 +282,38 @@ def CreateMasterUniqueMolIDMap(molID_class_list):
                     len(my_molID_class.molID_chID[molID])):
                 unique_molID_map[molID] = len(my_molID_class.molID_chID[molID])
     return unique_molID_map
+
+# FAPA MARCH 2024
+# This is a test to create a "track-changes" feature
+# We will keep track of the structures that contain
+# each entity :D let's see!
+def CreateMasterUniqueMolIDMapWithFileName(molID_class_list):
+    files_contain_molID = {} #this will be a dictionary of entity:[list of files]
+    for my_molID_class in molID_class_list:
+        for molID in my_molID_class.molID_chID:
+            if molID not in files_contain_molID:
+                files_contain_molID[molID] = [my_molID_class.file_name]
+            else:
+                files_contain_molID[molID].append(my_molID_class.file_name)
+    return files_contain_molID
+
+
+def Print_MolID_To_Files_Map(MolID_to_files_map,target_dir,write_csv=True):
+    if write_csv:
+        with open(f'{target_dir}/MolID_To_Files_Map.csv', 'w') as fout:
+            fout.write('Entity:Number_of_Files:Files\n')
+    for key in MolID_to_files_map:
+        #print(key + ":" +str(MolID_to_files_map[key]))
+        filelist = [x.split("/")[-1] for x in MolID_to_files_map[key]]
+        print(key + ":  " +", ".join(filelist))
+        if write_csv:
+            with open(f'{target_dir}/MolID_To_Files_Map.csv', 'a') as fout:
+                fout.write(f'{key}:{len(filelist)}:{",".join(filelist)}\n')
+    print("\n")
+
+
+# FAPA MARCH 2024 END
+
 
 #
 #
