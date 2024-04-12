@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/Users/fatima/anaconda3/envs/PDBCleanV2/bin/python
 # coding: utf-8
 
 from __future__ import print_function
@@ -38,6 +38,7 @@ while(input_menu != "QUIT"):
     if(input_menu_check == "1"):
         print("    2) View conversion template")
         print("    3) Perform residue number standardization")
+        print("    4) Save conversion template")
         print("    OR Type QUIT to exit")
     input_menu = input('Option Number: ')
     if (input_menu == "1"):
@@ -50,3 +51,5 @@ while(input_menu != "QUIT"):
         resstd.show_conversiontemplate(Structure_ConversionTemplate)
     elif (input_menu == "3" and input_menu_check == "1"):
         resstd.conversiontemplate_to_pdb(filelist, Structure_ConversionTemplate, target_dir=target_dir)
+    elif (input_menu == "4" and input_menu_check == "1"):
+        resstd.write_and_show_conversiontemplate(Structure_ConversionTemplate,target_dir,True)
