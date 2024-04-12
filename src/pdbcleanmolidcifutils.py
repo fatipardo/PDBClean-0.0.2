@@ -283,6 +283,35 @@ def CreateMasterUniqueMolIDMap(molID_class_list):
                 unique_molID_map[molID] = len(my_molID_class.molID_chID[molID])
     return unique_molID_map
 
+# FAPA APRIL 2024 V2 STARTS
+
+# Compile information from each file to create a master map of molID to
+# number of occurrences
+def CreateMasterUniqueMolIDOccursLIST(molID_class_list):
+    unique_molID_map_list = {}
+    for my_molID_class in molID_class_list:
+        for molID in my_molID_class.molID_chID:
+            if (unique_molID_map_list.get(molID) is None):
+                unique_molID_map_list[molID] = \
+                    [len(my_molID_class.molID_chID[molID])]
+            else:
+                unique_molID_map_list[molID].append(len(my_molID_class.molID_chID[molID]))
+    return unique_molID_map_list
+
+def CreateMasterUniqueMolIDinitialChainIDsLIST(molID_class_list):
+    unique_molID_ChainIDs_map_list = {}
+    for my_molID_class in molID_class_list:
+        for molID in my_molID_class.molID_chID:
+            if (unique_molID_ChainIDs_map_list.get(molID) is None):
+                unique_molID_ChainIDs_map_list[molID] = \
+                    [my_molID_class.molID_chID[molID]]
+            else:
+                unique_molID_ChainIDs_map_list[molID].append([my_molID_class.molID_chID[molID]])
+    return unique_molID_ChainIDs_map_list
+
+
+# FAPA APRIL 2024 V2 END
+
 # FAPA MARCH 2024
 # This is a test to create a "track-changes" feature
 # We will keep track of the structures that contain
@@ -314,7 +343,86 @@ def Print_MolID_To_Files_Map(MolID_to_files_map,target_dir,write_csv=True):
 
 # FAPA MARCH 2024 END
 
+### FAPA APRIL 2024 START
 
+def show_full_conversion_and_file_list(current_MolID_class_list,current_MolID_file_list,target_dir,write_csv=True ):
+    """
+    show_full_conversion
+    """
+    if write_csv:
+        with open(f'{target_dir}/NewChainID_MolID_Files_Map.csv', 'w') as fout:
+            fout.write('NewChainID:Entity:NumberOfFiles:Files\n')
+
+    for molIDConversion in current_MolID_class_list:
+        molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+        #print(molIDConversion.molID+":"+molIDCon_chID_list_forPrint)
+        filelist = [x.split("/")[-1] for x in current_MolID_file_list[molIDConversion.molID]]
+        for file_name in filelist:
+            print(molIDCon_chID_list_forPrint+":"+molIDConversion.molID+":"+str(len(filelist))+":"+file_name)
+            if write_csv:
+                with open(f'{target_dir}/NewChainID_MolID_Files_Map.csv', 'a') as fout:
+                    fout.write(f'{molIDCon_chID_list_forPrint}:{molIDConversion.molID}:{str(len(filelist))}:{file_name}\n')
+    print("\n")
+
+
+def show_full_conversion_and_file_list_by_number_chains(current_MolID_class_list,current_MolID_file_list,MolID_occur_dict_of_lists,target_dir,write_csv=True ):
+    """
+    show_full_conversion
+    """
+    if write_csv:
+        with open(f'{target_dir}/NewChainID_numbered_MolID_Files_Map.csv', 'w') as fout:
+            fout.write('NewChainID:Entity:NumberOfFiles:Files\n')
+
+    for molIDConversion in current_MolID_class_list:
+        #molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+        #print(molIDConversion.molID+":"+molIDCon_chID_list_forPrint)
+        filelist = [x.split("/")[-1] for x in current_MolID_file_list[molIDConversion.molID]]
+        counter=0
+        for file_name in filelist:
+            nchains=MolID_occur_dict_of_lists[molIDConversion.molID][counter]
+            if nchains > 5:
+                molIDCon_chID_list_forPrint = str(nchains)+"x"+str(molIDConversion.chID_list[0])
+            else:
+                molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list[:nchains]))
+            print(molIDCon_chID_list_forPrint+":"+molIDConversion.molID+":"+str(len(filelist))+":"+file_name)
+            if write_csv:
+                with open(f'{target_dir}/NewChainID_numbered_MolID_Files_Map.csv', 'a') as fout:
+                    fout.write(f'{molIDCon_chID_list_forPrint}:{molIDConversion.molID}:{str(len(filelist))}:{file_name}\n')
+            counter+=1
+    print("\n")
+
+
+def TEST_show_full_conversion_and_file_list_by_number_chains(MolID_ChainID_dict_of_lists,current_MolID_class_list,current_MolID_file_list,MolID_occur_dict_of_lists,target_dir,write_csv=True ):
+    """
+    show_full_conversion
+    """
+    if write_csv:
+        with open(f'{target_dir}/OldChainID_NewChainID_numbered_MolID_Files_Map.csv', 'w') as fout:
+            fout.write('OldChainID(label_asym_id):NewChainID:Entity:NumberOfFiles:Files\n')
+
+    for molIDConversion in current_MolID_class_list:
+        #molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list))
+        #print(molIDConversion.molID+":"+molIDCon_chID_list_forPrint)
+        filelist = [x.split("/")[-1] for x in current_MolID_file_list[molIDConversion.molID]]
+        counter=0
+        for file_name in filelist:
+            nchains=MolID_occur_dict_of_lists[molIDConversion.molID][counter]
+            if nchains > 5:
+                molIDCon_chID_list_forPrint = str(nchains)+"x"+str(molIDConversion.chID_list[0])
+            else:
+                molIDCon_chID_list_forPrint = re.sub('\[|\]| |\'', '', str(molIDConversion.chID_list[:nchains]))
+
+            chainds_for_print = re.sub('\[|\]| |\'', '',str(MolID_ChainID_dict_of_lists[molIDConversion.molID][counter]))
+
+            print(chainds_for_print + ":" + molIDCon_chID_list_forPrint+":"+molIDConversion.molID+":"+str(len(filelist))+":"+file_name)
+            if write_csv:
+                with open(f'{target_dir}/OldChainID_NewChainID_numbered_MolID_Files_Map.csv', 'a') as fout:
+                    fout.write(f'{chainds_for_print}:{molIDCon_chID_list_forPrint}:{molIDConversion.molID}:{str(len(filelist))}:{file_name}\n')
+            counter+=1
+
+    print("\n")
+
+### FAPA APRIL 2024 END
 #
 #
 # Read input file function
