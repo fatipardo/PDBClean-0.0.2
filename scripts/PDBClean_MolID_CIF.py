@@ -34,6 +34,8 @@ unique_molID_occur_map  = molidutils.CreateMasterUniqueMolIDMap(master_molID_cla
 molIDConversion_list    = molidutils.uniquelist_to_conversionlist(unique_molID_occur_map)
 #FAPA MARCH 2024
 MolID_to_files_map = molidutils.CreateMasterUniqueMolIDMapWithFileName(master_molID_class_list)
+MolID_occur_dict_of_lists = molidutils.CreateMasterUniqueMolIDOccursLIST(master_molID_class_list)
+MolID_ChainID_dict_of_lists = molidutils.CreateMasterUniqueMolIDinitialChainIDsLIST(master_molID_class_list)
 
 #####################################
 # INTERACTIVE MOLID CONVERSION MENU #
@@ -63,6 +65,9 @@ while(input_menu != "QUIT"):
              5) Go entry by entry to add chain ID conversion
              6) Remove a chain ID conversion
              A) Print entity:file_name list
+             B) TEST TRACKING CHAIN-NAME:ENTITY:FILE-NAME
+             C) Yet another test. Tracking, similar to B but print only relevant chain names...
+             D) Adding original chain names 0_0
           """)
     if (input_menu_complete == "1"):
         print("    7) Continue to next step of curation")
@@ -83,6 +88,13 @@ while(input_menu != "QUIT"):
         molIDConversion_list = molidutils.edit_conversion_interface(molIDConversion_list, action='remove')
     elif (input_menu == "A"):
         molidutils.Print_MolID_To_Files_Map(MolID_to_files_map,target_dir)
+    elif (input_menu == "B"):
+        molidutils.show_full_conversion_and_file_list(molIDConversion_list,MolID_to_files_map,target_dir)
+    elif (input_menu == "C"):
+        molidutils.show_full_conversion_and_file_list_by_number_chains(molIDConversion_list,MolID_to_files_map,MolID_occur_dict_of_lists,target_dir)
+    elif (input_menu == "D"):
+        molidutils.TEST_show_full_conversion_and_file_list_by_number_chains(MolID_ChainID_dict_of_lists,molIDConversion_list, MolID_to_files_map,
+                                                                       MolID_occur_dict_of_lists, target_dir)
     elif (input_menu == "7"):
         if (input_menu_complete == "1"):
             master_molID_class_list = molidutils.update_masterlist(master_molID_class_list, molIDConversion_list)
