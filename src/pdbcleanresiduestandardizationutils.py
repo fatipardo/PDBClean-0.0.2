@@ -115,10 +115,34 @@ def show_conversiontemplate(Structure_ConversionTemplate):
     """
     show_conversion_template
     """
+
     for structid in Structure_ConversionTemplate:
         print(structid)
         for key in Structure_ConversionTemplate[structid]:
             print(key + ":" + str(Structure_ConversionTemplate[structid][key]))
+
+## FAPA
+def write_and_show_conversiontemplate(Structure_ConversionTemplate, target_dir, write_csv=True):
+    """
+    show_conversion_template
+    """
+
+    if write_csv:
+        with open(f'{target_dir}/OldResID_NewResID_Map.csv', 'w') as fout:
+            fout.write('OldResID:NewResId:File\n')
+
+
+    for structid in Structure_ConversionTemplate:
+        print(structid)
+        for key in Structure_ConversionTemplate[structid]:
+            print(key + ":" + str(Structure_ConversionTemplate[structid][key]))
+            #structid_for_print=[x.split("/")[-1] for x in structid]
+            structid_for_print = structid.split("/")[-1]
+            if write_csv:
+                with open(f'{target_dir}/OldResID_NewResID_Map.csv', 'a') as fout:
+                    fout.write(f'{key}:{str(Structure_ConversionTemplate[structid][key])}:{structid_for_print}\n')
+
+# FAPA
 
 #################
 # FINALIZE STEP #
