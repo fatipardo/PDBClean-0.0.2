@@ -54,7 +54,7 @@ def update_masterlist(master_molID_class_list, molIDConversion_list):
         molID_class.check_for_concatenations()
     return master_molID_class_list
 
-# The class containing all the information about each file neccessary to build
+# The class containing all the information about each file necessary to build
 # a conversion template
 class MolID(object):
         # file_name = ""
