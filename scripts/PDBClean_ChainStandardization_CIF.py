@@ -65,4 +65,4 @@ while(input_menu != "QUIT"):
                                                    filelist,
                                                    target_dir=target_dir)
         print("Done!")
-        input_menu="QUIT"
+        input_menu = "QUIT"

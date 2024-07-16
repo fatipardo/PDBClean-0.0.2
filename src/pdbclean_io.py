@@ -8,7 +8,7 @@ def check_project(projdir=None, level='top', action='create', verbose=True):
     if projdir is None:
         print("Please provide a project directory path")
     else:
-        dirname=projdir
+        dirname = projdir
         if(level!='top'):
             dirname=dirname+'/'+level
         if(action=='create'):

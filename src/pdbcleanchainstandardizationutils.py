@@ -147,7 +147,7 @@ def review_standard_seq(Structure_Sequences, Standard_Sequences):
             if input_submenu in Standard_Sequences:
                 print(Standard_Sequences[input_submenu])
         elif (input_submenu == "3"):
-            chid= input('Chain ID: ')
+            chid = input('Chain ID: ')
             this_chainsseq_list, this_chainsseq_score = get_this_chainsseq_list(Structure_Sequences, chid, verbose=True)
 
 def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, structid_list, filelist, target_dir):
@@ -155,7 +155,7 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
     align_to_standard_seq and save new files to disk
     """
     ignore_chid = []
-    input_submenu= ""
+    input_submenu = ""
     input_submenu_4_check_1 = ""
     while(input_submenu != "QUIT"):
         print("    Perform pairwise alignments against Standard Sequences. Type QUIT to return to the main menu.",
@@ -209,7 +209,7 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
                 print(filelist2)
                 print("this is chid_seq_map and length")
                 print(chid_seq_map)
-                chid_seq_map_len=len(chid_seq_map)
+                chid_seq_map_len = len(chid_seq_map)
                 print(chid_seq_map_len)
                 Struct_ChainReassignmentMap = {}
                 Struct_ChainReassignmentScores = {}
@@ -264,7 +264,7 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
 
 
                     #if std_chid not in ignore_chid: # we don't want to have any of the ignored chains 0_0
-                        test_list_list[std_chid]= structchid_score_map
+                        test_list_list[std_chid] = structchid_score_map
 
                         #print("test_list_list:")
                         #print(test_list_list)
@@ -316,10 +316,10 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
 
                 capacities={}
                 for h in list(test_list_list_sortkey2.keys()):
-                    capacities[h]=1
+                    capacities[h] = 1
 
                 game = HospitalResident.create_from_dictionaries(test_list_list_sortkey2, test_list_list_T_sortkey, capacities)
-                solved_game=game.solve()
+                solved_game = game.solve()
 
                 output = {}
                 for k in solved_game.keys():
@@ -370,7 +370,7 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
     align_to_standard_seq
     """
     ignore_chid = []
-    input_submenu= ""
+    input_submenu = ""
     input_submenu_4_check_1 = ""
     while(input_submenu != "QUIT"):
         print("    Perform pairwise alignments against Standard Sequences. Type QUIT to return to the main menu.",
@@ -478,7 +478,7 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                 # Now for final check, make sure no conflicts by checking unused chid
                 # Loop over all chid in the structure
                 unused_chid = []
-                free_chid=[] #FAPA
+                free_chid = [] #FAPA
                 for chid in chid_seq_map:
                     if chid not in Struct_ChainReassignmentMap.keys():
                         unused_chid.append(chid)

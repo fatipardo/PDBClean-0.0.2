@@ -20,8 +20,8 @@ n_arg = len(sys.argv)
 if(n_arg<3):
     print('Usage error: {0} <source directory> <target directory>'.format(sys.argv[0]))
     sys.exit()
-source_dir=sys.argv[1]
-target_dir=sys.argv[2]
+source_dir = sys.argv[1]
+target_dir = sys.argv[2]
 
 
 #########################################
