@@ -13,9 +13,26 @@ Make sure to select an appropriate label to the issue before you submit it.
 
 ## Do you want to help fix an issue? 
 
-Comment "take" to the issue you want to fix and we will assign it to you.
+`Comment "take" on the issue you want to fix and we will assign it to you. `
 
-When you submit a pull request, add the GitHub issue number in the title. 
+### Follow the guidelines for contributing to the code:
+  
+  Running Tests: Run sufficient tests to ensure proper functionality
+  
+  Documentation: make sure that any newly added functions or methods are well documented
+
+ 
+follow this checklist to make sure the code is well "done"?:
+   
+   - [ ] Issue referenced in PR title
+   
+   - [ ] Code passes existing tests
+   
+   - [ ] New code is well-documented
+
+### If any issues arise or if there are any overall questions, don't hesitate to contact us `here` :)
+
+pretty please adhere to code of conduct (https://github.com/fatipardo/PDBClean-0.0.2/blob/7a3a7722576e564b6ec2870c365c6fb30ea7bdec/CODE_OF_CONDUCT.md)
 
 
 
