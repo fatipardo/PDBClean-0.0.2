@@ -45,7 +45,7 @@ If someone else has already opened an issue similar to yours, opt to commenting 
    - [ ] New code is well-documented
 
 ## Code conventions
-Follow the style conventions and formatting of existsing code, however if you have any suggestions on improving our current styiling methods, we are more than open to looking into it.
+Please follow the style conventions and formatting of existsing code, however if you have any suggestions on improving our current styiling methods, we are more than open to looking into it.
 
 ### If any other questions arise, don't hesitate to contact us `[blank for now]` :)
 
