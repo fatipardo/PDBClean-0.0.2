@@ -41,3 +41,8 @@ Comment on the existing issue to add more information or leave a reaction on the
 - **Only submit a pull request to issues that have been asssigned to you**
 
 
+## :purple_heart: Credits
+
+Written by [@fatipardo](https://github.com/fatipardo) and [@gdkwxn](https://github.com/gdkwxn).
+
+Many of the ideas and prose for the statements in this document were based on or inspired by the [contributing page](https://github.com/jessesquires/.github/blob/main/CONTRIBUTING.md) written by [@jessesquires](https://github.com/jessesquires)
