@@ -62,8 +62,18 @@ This notebook can be run after doing step 0. It creates plots that summarize imp
 
 ## Installation
 
-We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. Additionally, Anaconda is a recommended prerequisite before utilizing PDBClean, and we provide our tutorial as jupyter notebooks. 
-We have tested the installation on MacOS.
+We recommend installing PDBClean inside a virtual environment. We provide an `environment.yml` with the libraries you will need. 
+We have tested the installation on MacOS with intel processors.
+Ensuring you have the pre-requisites will facilitate the installation process!
+
+### Pre-requisites
+
+- Xcode including Command Line tools 
+- Anaconda
+- Create SSH Key and link it to your GitHub account
+- Jupyter notebook
+
+### Installation steps
 
 1. Download PDBClean from GitHub and install environment from YML file
 
