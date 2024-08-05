@@ -3,7 +3,7 @@ import re
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 
 #
-def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', pdbformat='.cif', verbose=True):
+def process(projdir = None, step ='clean', source ='raw_bank', target = 'clean_bank', pdbformat = '.cif', verbose = True):
     """
     process
     """
@@ -13,21 +13,21 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
         input_list = glob.glob(source_dir+'/*'+pdbformat)
         i=0
         for input_cif in input_list:
-            cif_name=os.path.basename(input_cif)
+            cif_name = os.path.basename(input_cif)
             if verbose:
                 i+=1
                 print('[{0}/{1}]: {2}'.format(i,len(input_list),cif_name))
-            output_cif=target_dir+'/'+cif_name
-            if(step=='clean'):
+            output_cif = target_dir+'/'+cif_name
+            if(step == 'clean'):
                 if os.path.isfile(output_cif):
                     os.remove(output_cif)
                 clean_cif(input_cif, output_cif) #FAPA, CLOSE )
-            elif(step=='simplify'):
+            elif(step == 'simplify'):
                 # missing line: remove all assembly cif already created
                 simplify_cif(input_cif, output_cif, pdbformat)
-            elif(step=='fixhet'):
+            elif(step == 'fixhet'):
                 fixhet_cif(input_cif, output_cif, pdbformat)
-            elif(step=='finalize'):
+            elif(step == 'finalize'):
                 finalize(input_cif, output_cif, pdbformat)
 #
 def finalize(oldfile, newfile, pdbformat):
@@ -110,7 +110,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
 
     for assembly in assembly_id_list:
 
-        if (len(assembly_id_list)==1):
+        if (len(assembly_id_list) == 1):
             newciffilename = str(re.sub(pdbformat, '', newfile))+"+00"
         else:
             newciffilename = str(re.sub(pdbformat, '', newfile))+"+0"+str(assembly)
@@ -334,9 +334,9 @@ def check_and_write_entry(entry, line, alllines, key, flag, linerange, newfile):
     """
     if entry in key:
         flag = 1
-    elif (flag==1) and '#' in line[0]:
+    elif (flag == 1) and '#' in line[0]:
         with open(newfile, 'a') as new_file:
             for i in linerange:
                 new_file.write(alllines[i])
-        flag=0
+        flag = 0
     return flag

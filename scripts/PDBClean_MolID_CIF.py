@@ -47,7 +47,7 @@ input_menu = ""
 input_menu_complete = ""
 # For use in the next section
 concat_menu = ""
-final_menu=""
+final_menu = ""
 
 while(input_menu != "QUIT"):
     if (input_menu_complete == "1"):
@@ -209,9 +209,9 @@ if (concat_menu == "START"):
             master_molID_class_list = molidutils.list_accept_concatenations(master_molID_class_list, unassigned_MolID, new_order=new_order, action='accept')[0]
             # Note for tomorrow: here we need to create a new function in molidutils, so we can go over all concatenations!
         elif (concat_menu == "5"):
-            allnewchains=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')
+            allnewchains = molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')
             for newchain in allnewchains:
-                new_order=None
+                new_order = None
                 master_molID_class_list = molidutils.list_accept_concatenations_auto(master_molID_class_list, newchain, new_order=new_order, action='accept')[0]
             count_problems = molidutils.problem_counter(master_molID_class_list)
             print(count_problems)

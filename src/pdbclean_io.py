@@ -1,7 +1,7 @@
 import sys, os, shutil, datetime
 #
 
-def check_project(projdir=None, level='top', action='create', verbose=True):
+def check_project(projdir = None, level = 'top', action = 'create', verbose = True):
     """
     check_project
     """
@@ -10,12 +10,12 @@ def check_project(projdir=None, level='top', action='create', verbose=True):
     else:
         dirname = projdir
         if(level!='top'):
-            dirname=dirname+'/'+level
-        if(action=='create'):
+            dirname = dirname+'/'+level
+        if(action == 'create'):
             create_dir(dirname, verbose=verbose)
-        elif(action=='clean'):
+        elif(action == 'clean'):
             clean_dir(dirname, verbose=verbose)
-        elif(action=='delete'):
+        elif(action == 'delete'):
             delete_dir(dirname, verbose=verbose)
 
 def create_dir(dirpath, verbose=True):
@@ -24,7 +24,7 @@ def create_dir(dirpath, verbose=True):
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
         if verbose:
-            now=datetime.datetime.now()
+            now = datetime.datetime.now()
             f = open(dirpath+'/info.txt', 'w')
             f.write('directory created on {0}'.format(now))
             f.close()

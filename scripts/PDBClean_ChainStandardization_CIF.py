@@ -13,8 +13,8 @@ n_arg = len(sys.argv)
 if(n_arg<3):
     print('Usage error: {0} <source directory> <target directory>'.format(sys.argv[0]))
     sys.exit()
-source_dir=sys.argv[1]
-target_dir=sys.argv[2]
+source_dir = sys.argv[1]
+target_dir = sys.argv[2]
 
 
 #############################################
@@ -58,11 +58,11 @@ while(input_menu != "QUIT"):
     elif (input_menu == "3" and input_menu_check_1 == "1"):
         chainstd.review_standard_seq(Structure_Sequences, Standard_Sequences)
 
-    elif (input_menu == "4" and input_menu_check_1=="1"):
+    elif (input_menu == "4" and input_menu_check_1 == "1"):
         chainstd.align_to_std_seq_and_save_to_disk(Structure_Sequences,
                                                    Standard_Sequences,
                                                    structid_list,
                                                    filelist,
-                                                   target_dir=target_dir)
+                                                   target_dir = target_dir)
         print("Done!")
         input_menu = "QUIT"

@@ -917,7 +917,7 @@ def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list
     print(structid_list)
 
     for my_files in filelist:
-        newciffilename=target_dir+'/'+my_files.split('/')[-1]
+        newciffilename = target_dir+'/'+my_files.split('/')[-1]
         with open(my_files) as myfile:
             print("my file name")
             print(myfile.name)
