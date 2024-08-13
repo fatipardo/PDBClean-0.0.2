@@ -8,7 +8,19 @@ from contextlib import closing, suppress
 #
 def download_pdb_from_metadata(metadata, projdir=None):
     """
-    download_pdb_from_metadata
+    Downloads PDB files based on metadata, in this case the description lines of the fasta files,
+    and saves them in the specified project directory.
+
+    Parameters:
+    -----------
+    metadata : list of str
+        A list of metadata strings, from which PDB IDs will be extracted.
+    projdir : str, optional
+        The path to the project directory where the PDB files will be saved. If None, a message will display.
+
+    Returns:
+    --------
+    None
     """
     if projdir is None:
         print("Please provide a project directory ...")
@@ -22,7 +34,20 @@ def download_pdb_from_metadata(metadata, projdir=None):
 
 def download_pdb_from_id(pdbid, pdbformat='.cif', download_dir=None):
     """
-    download-pdb_from_id
+    Downloads a specific PDB file using its ID and saves it in the specified directory.
+
+    Parameters:
+    -----------
+    pdbid : str
+        The PDB ID of the file that will be downloaded.
+    pdbformat : str, optional
+        The format of the PDB file to be downloaded. Default is '.cif'.
+     download_dir : str, optional
+        The directory where the downloaded file will be saved. If None, a message will display.
+
+    Returns:
+    --------
+    None
     """
     download_url='https://files.rcsb.org/download/'
     if download_dir is None:
@@ -34,7 +59,17 @@ def download_pdb_from_id(pdbid, pdbformat='.cif', download_dir=None):
 
 def get_idset_from_metadata(metadata):
     """
-    get_idset_from_metadata
+    Extracts and returns a set of unique PDB IDs from the provided metadata.
+
+    Parameters:
+    -----------
+    metadata : list of str
+        A list of metadata strings, each containing a PDB ID.
+
+    Returns:
+    --------
+    idlist : list of str
+        A sorted list of unique PDB IDs extracted from the metadata.
     """
     idlist = []
     for elt in metadata:
@@ -44,15 +79,25 @@ def get_idset_from_metadata(metadata):
 #
 def retrieve_sequence_from_PDB(keyword, mode='sequence', update=True, seqfile=None):
     """
-    retrieve_sequence_from_PDB: outputs a list of sequences fom seqfile (that needs to be updated if not input)
+    Retrieves sequences or metadata from a PDB sequence file based on the keyword match.
 
     Parameters:
-    ===========
-    - keyword: anything really
-    - mode: 'sequence': whether keyword should match a sequence
-            'metadata': or metadata
-    - update: (True/False) whether the list needs to be updated
-    - seqfile: if None, update needs to be True. The list retrieved online.
+    ---------
+    keyword : str
+        The keyword to search for in the sequence or metadata.
+    mode : str, optional
+        Specifies whether to match the keyword in the 'sequence' or 'metadata'. Default is 'sequence'.
+    update : bool, optional
+        If True, the sequence file will be downloaded or updated before searching. Default is True.
+    seqfile : str, optional
+        The path to the sequence file. If None, the file will be downloaded if update is True.
+
+    Returns:
+    --------
+    sequence : numpy.ndarray
+        A list of sequences that match the keyword.
+    metadata : numpy.ndarray
+        A list of metadata associated with the matching sequences (fasta files description line).
     """
     if update:
         with suppress(FileNotFoundError):
@@ -81,7 +126,17 @@ def retrieve_sequence_from_PDB(keyword, mode='sequence', update=True, seqfile=No
 #
 def retrieve_seqfile(seqfile=None):
     """
-    retrieve_seqfile
+    Downloads the PDB sequence file from the official RCSB FTP site.
+
+    Parameters:
+    -----------
+    seqfile : str, optional
+        The path where the sequence file will be saved. If None, the file will be saved as 'seqfile.txt'.
+
+    Returns:
+    --------
+    seqfile : str
+        The path to the downloaded sequence file.
     """
     sequrl='ftp://ftp.wwpdb.org/pub/pdb/derived_data/pdb_seqres.txt'
     if seqfile is None:
@@ -91,7 +146,18 @@ def retrieve_seqfile(seqfile=None):
 #
 def download_from_url(source, target):
     """
-    download_from_url
+    Downloads a file from a given URL and saves it to a specified target location.
+
+    Parameters:
+    -----------
+    source : str
+        The URL of the file to be downloaded.
+    target : str
+        The path where the downloaded file will be saved.
+
+    Returns:
+    --------
+    None
     """
     with closing(urlopen(source)) as r:
         with open(target, 'wb') as f:
