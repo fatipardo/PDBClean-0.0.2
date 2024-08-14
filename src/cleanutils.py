@@ -49,6 +49,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
         asym_id_list.append(mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list'])
 
     else:
+        #HEREEEEEEEWEIHWIUHFWIFHIWFHIWFHIWFIWFHIUWEFHWIUFHWIEFHIUEFEHIFWHFUWEHFUI
         assembly_id_list = []
         assembly_id_list = assembly_id
         asym_id_list = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
@@ -196,10 +197,6 @@ def simplify_cif(oldfile, newfile, pdbformat):
         L18 = mmcif_dict['_atom_site.auth_asym_id']
         L19 = mmcif_dict['_atom_site.auth_atom_id']
         L20 = mmcif_dict['_atom_site.pdbx_PDB_model_num']
-
-        # This is strictly to clean up a common problem found in ribosome structures
-        # HETATMs are defined mid-chain, ie in an asymmetric unit of non-HETATMs
-        # We want to treat these atoms different from other HETATMs
 
         # This section is necessary to print the biological assemblies on separate files
         BioAssembly = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
