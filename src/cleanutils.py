@@ -49,7 +49,6 @@ def simplify_cif(oldfile, newfile, pdbformat):
         asym_id_list.append(mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list'])
 
     else:
-        #HEREEEEEEEWEIHWIUHFWIFHIWFHIWFHIWFIWFHIUWEFHWIUFHWIEFHIUEFEHIFWHFUWEHFUI
         assembly_id_list = []
         assembly_id_list = assembly_id
         asym_id_list = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
