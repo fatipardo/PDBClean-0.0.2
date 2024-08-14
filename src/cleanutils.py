@@ -2,7 +2,6 @@ import os, glob
 import re
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 
-#
 def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', pdbformat='.cif', verbose=True):
     """
     process
@@ -12,16 +11,21 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
         target_dir = projdir+'/'+target
         input_list = glob.glob(source_dir+'/*'+pdbformat)
         i=0
+
         for input_cif in input_list:
             cif_name=os.path.basename(input_cif)
+
             if verbose:
                 i+=1
                 print('[{0}/{1}]: {2}'.format(i,len(input_list),cif_name))
+
             output_cif=target_dir+'/'+cif_name
+
             if(step=='clean'):
                 if os.path.isfile(output_cif):
                     os.remove(output_cif)
-                clean_cif(input_cif, output_cif) #FAPA, CLOSE )
+                clean_cif(input_cif, output_cif)
+
             elif(step=='simplify'):
                 # missing line: remove all assembly cif already created
                 simplify_cif(input_cif, output_cif, pdbformat)
@@ -31,10 +35,10 @@ def simplify_cif(oldfile, newfile, pdbformat):
     simplify_cif
     """
     mmcif_dict = MMCIF2Dict(oldfile)
-    #
+
     # Create map from asym_id to assembly_id
-    # assembly_id information may be either str or list type, so I'm going to force
-    # to list type
+    # Convert assembly_id to a list, as it can be either a string or a list
+
     asym_assembly_map = {}
     assembly_id = mmcif_dict['_pdbx_struct_assembly_gen.assembly_id']
 
@@ -43,10 +47,12 @@ def simplify_cif(oldfile, newfile, pdbformat):
         asym_id_list = []
         assembly_id_list.append(assembly_id)
         asym_id_list.append(mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list'])
+
     else:
         assembly_id_list = []
         assembly_id_list = assembly_id
         asym_id_list = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
+
     # Convert asym_id entry into a list of asym_ids
     for i in range(len(assembly_id_list)):
         asym_id = asym_id_list[i]
@@ -62,30 +68,36 @@ def simplify_cif(oldfile, newfile, pdbformat):
             newciffilename = str(re.sub(pdbformat, '', newfile))+"+00"
         else:
             newciffilename = str(re.sub(pdbformat, '', newfile))+"+0"+str(assembly)
+
         newciffile = open(newciffilename+pdbformat, 'w')
         newciffile.write("data_"+newciffilename+"\n")
-        #Write entry.id
+
+        # Writes entry.id
         newciffile.write("#\n")
-        L = str(mmcif_dict['_entry.id']) # FAPA: Change to STR because the default was a list
+
+        # Changes the list format to str
+        L = str(mmcif_dict['_entry.id'])
         entryid = '_entry.id   ' + L
         newciffile.write(entryid + "\n")
+
         # Write Audit category
         newciffile.write("#\n")
         newciffile.write("loop_\n")
         newciffile.write("_citation_author.name\n")
-        #FAPA TEST
+
         if '_citation_author.name' in mmcif_dict:
             L = mmcif_dict['_citation_author.name']
         else:
             L = "???"
 
-        #L = mmcif_dict['_citation_author.name']
+
         if isinstance(L, list):
             for i in L:
                 newciffile.write("'" + re.sub("'", "", i) + "'" + "\n")
         else:
             newciffile.write("'" + re.sub("'", "", L) + "'" + "\n")
-        # Write Citation category
+
+        # Writes Citation category
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
         newciffile.write("_citation.title" + "\n")
@@ -96,12 +108,11 @@ def simplify_cif(oldfile, newfile, pdbformat):
         L3 = mmcif_dict['_citation.pdbx_database_id_DOI']
         if isinstance(L1, list):
             for i in range(len(L1)):
-                #newciffile.write("'" + re.sub("'", "", L1[i]) + "' " + L2[i] + " " + L3[i] + "\n")
                 newciffile.write("'" + re.sub("\n"," ",re.sub("'", "", L1[i])) + "' " + L2[i] + " " + L3[i] + "\n") #FAPA
         else:
-            #newciffile.write("'" + re.sub("'", "", L1) + "' " + L2 + " " + L3 + "\n")
             newciffile.write("'" + re.sub("\n"," ",re.sub("'", "", L1[i])) + "' " + L2[i] + " " + L3[i] + "\n") #FAPA
-        # Write Resolution category
+
+        # Writes Resolution category
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
         newciffile.write("_exptl.method" + "\n")
@@ -129,8 +140,8 @@ def simplify_cif(oldfile, newfile, pdbformat):
             newciffile.write("'" + L1 + "' " + L2[0] + " " + "\n")
         else:
             newciffile.write("'" + L1 + "' " + L2 + " " + "\n")
-        # Write Entity category
-        # This was the part fixed by FAPA
+
+        # Writes Entity category
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
         newciffile.write("_entity.id" + "\n")
@@ -142,7 +153,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
             L2[i] = L2[i].replace(":", "")
             newciffile.write(L1[i] + " '" + L2[i].replace("'", "") + "'\n")
 
-        # Now write the coordinate portion of the file
+        # Writes the coordinate portion of the file
         newciffile.write("#" + "\n")
         newciffile.write("loop_" + "\n")
         newciffile.write("_atom_site.group_PDB" + "\n")
@@ -185,53 +196,19 @@ def simplify_cif(oldfile, newfile, pdbformat):
         L18 = mmcif_dict['_atom_site.auth_asym_id']
         L19 = mmcif_dict['_atom_site.auth_atom_id']
         L20 = mmcif_dict['_atom_site.pdbx_PDB_model_num']
+
         # This is strictly to clean up a common problem found in ribosome structures
-        # HETATMs are defined mid chain, ie in an asymmetric unit of non-HETATMs
-        # Want to treat these atoms different from other HETATMs
+        # HETATMs are defined mid-chain, ie in an asymmetric unit of non-HETATMs
+        # We want to treat these atoms different from other HETATMs
 
-        ##FAPA ERASES
-        #asymatom_list = []
-        #for i in range(len(L1)):
-        #        if L1[i] == "ATOM":
-        #        if L7[i] not in asymatom_list:
-        #            asymatom_list.append(L7[i])
-        #
-        #hetatm_map = {}
-        #hetatm_count = 0
-        ##END FATIMA ERASES
-
-        ### BEGIN NEW CODE : THIS SECTION FIXES THE BUG
-        ### This section is necessary to print the biological assemblies on separate files
-
+        # This section is necessary to print the biological assemblies on separate files
         BioAssembly = mmcif_dict['_pdbx_struct_assembly_gen.asym_id_list']
 
-        ### TEST FAPA
-        #print(assembly)
-        #print(BioAssembly[int(assembly)-1])
-        #print(type(BioAssembly[int(assembly)-1]))
-        #print(BioAssembly[int(assembly)-1].split(','))
-        #print(list(re.sub(",", "", BioAssembly[int(assembly)-1])))
-        ### END TEST FAPA
-
-#        for i in range(len(L1)):
-            #if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
-#            if (L7[i] in BioAssembly[int(assembly)-1]):
-#                    newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-#                elif (L1[i]=="HETATM"):
-#                    if L7[i] in asymatom_list:
-#                        newciffile.write("ATOM" + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-#                    else:
-#                        newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + "het" + L6[i] + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
-#        newciffile.write("#" + "\n")
-
-
         for i in range(len(L1)):
-            #if (L7[i] in list(re.sub(",", "", BioAssembly[int(assembly)-1]))): # Only print the chains pertaining to particular biological assembly unit
             if (L7[i] in BioAssembly[int(assembly)-1].split(',')):
                 newciffile.write(L1[i] + " " + L2[i] + " " + L3[i] + ' "' + L4[i] + '" ' + L5[i] + " " + L6[i] + " " + L7[i] + " " + L8[i] + " " + L9[i] + " " + L10[i] + " " + L11[i] + " " + L12[i] + " " + L13[i] + " " + L14[i] + " " + L15[i] + " " + L16[i] + " " + L17[i] + " " + L18[i] + ' "' + L19[i] + '" ' + L20[i] + "\n")
         newciffile.write("#" + "\n")
 
-        ### END NEW CODE
 
 #
 def clean_cif(oldfile, newfile):
