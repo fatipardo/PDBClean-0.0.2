@@ -25,59 +25,7 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
             elif(step=='simplify'):
                 # missing line: remove all assembly cif already created
                 simplify_cif(input_cif, output_cif, pdbformat)
-            elif(step=='fixhet'):
-                fixhet_cif(input_cif, output_cif, pdbformat)
-            elif(step=='finalize'):
-                finalize(input_cif, output_cif, pdbformat)
-#
-def finalize(oldfile, newfile, pdbformat):
-    """
-    finalize
-    """
-    with open(oldfile) as myfile:
-        newciffile = open(newfile, 'w')
-        for line in myfile:
-            line_split = line.strip()
-            line_split = line.split()
-            if (line_split[0] == "ATOM") or (line_split[0] == "HETATM"):
-                newciffile.write(line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[17] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n")
-            else:
-                newciffile.write(line)
-#
-def fixhet_cif(oldfile, newfile, pdbformat):
-    """
-    fixhet_cif
-    """
-    with open(oldfile) as myfile:
-        hetch_count_map = {}
-        newciffile = open(newfile, 'w')
-        last_res = 0
-        last_res = {}
-        usage = {}
-        for line in myfile:
-            line_split = line.strip()
-            line_split = line_split.split()
-            # Can Update so that it looks at all atoms?
-            if (line_split[0] == "HETATM"):
-                key = str(line_split[15]) + "_" + str(line_split[16]) + "_" + str(line_split[17]) + "_" + str(line_split[18])
-                if line_split[17] in hetch_count_map:
-                    if (line_split[15] != last_res[line_split[17]]) or (key in usage):
-                        if key not in usage:
-                            usage[key] = 1
-                        hetch_count_map[line_split[17]] += 1
-                        newciffile.write(line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n")
-                        last_res[line_split[17]] = line_split[15]
-                    else:
-                        usage[key] = 1
-                        newciffile.write(line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n")
-                else:
-                    usage[key] = 1
-                    hetch_count_map[line_split[17]] = 1
-                    last_res[line_split[17]] = line_split[15]
-                    newciffile.write(line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(hetch_count_map[line_split[17]]) + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n")
-            else:
-                newciffile.write(line)
-#
+
 def simplify_cif(oldfile, newfile, pdbformat):
     """
     simplify_cif
