@@ -2,7 +2,6 @@ name: PDBCleanV2
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
   - appnope=0.1.3=pyhd8ed1ab_0
   - argon2-cffi=21.3.0=pyhd8ed1ab_0
