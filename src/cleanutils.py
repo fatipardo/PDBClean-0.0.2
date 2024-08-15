@@ -4,7 +4,30 @@ from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 
 def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', pdbformat='.cif', verbose=True):
     """
-    process
+    Processes all CIF files in the source directory through one of the processing steps,
+    and then saves the results to the target directory. The specified steps include, 'clean' and 'simplify'
+
+    Parameters:
+    -----------
+    projdir : str, optional
+        The project directory containing source and target subdirectories. If none, the current directory is used.
+    step : str, optional
+        The processing step to apply to each CIF file. If none, the current step is 'clean', which splits each cif file
+        into its biological assemblies
+    source : str, optional
+        The subdirectory within the project directory where the raw CIF files are in. The default is the
+        subdirectory titled 'raw_bank'
+    target : str, optional
+        The subdirectory within the project directory where processed CIF files will be saved. The default is the
+        subdirectory titled 'clean_bank'
+    pdbformat : str, optional
+        The file extension format for CIF files. Thr default is '.cif'.
+    verbose : bool, optional
+        If True, progress is printed to the console. Default is true.
+
+    Returns:
+    -----------
+    None
     """
     if projdir is not None:
         source_dir = projdir+'/'+source
@@ -32,7 +55,21 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
 
 def simplify_cif(oldfile, newfile, pdbformat):
     """
-    simplify_cif
+    Simplifies a CIF file by creating a new version with less content that focuses on specific biological assemblies.
+
+    Parameters:
+    -----------
+    oldfile : str
+        Path to the original CIF file needed to be simplified.
+    newfile: str
+        Path where the new, simplified CIF file(s) will be saved. The function creates multiple files if there are
+        more than one biological assemblies.
+    pdbformat : str
+        The file format extension used when saving the new CIF files.
+
+    Returns:
+    -----------
+    None
     """
     mmcif_dict = MMCIF2Dict(oldfile)
 
@@ -208,7 +245,18 @@ def simplify_cif(oldfile, newfile, pdbformat):
 #
 def clean_cif(oldfile, newfile):
     """
-    clean_cif
+    Cleans a CIF file by extracting and writing specific entries to a new file.
+
+    Parameters:
+    -----------
+    oldfile : str
+        The path to the original CIF file needed to be cleaned.
+    newfile : str
+        The path where the cleaned CIF file will be written.
+
+    Returns:
+    -----------
+    None
     """
     entry_list = ['_entry.id',
                   '_atom_site.group_PDB',
@@ -250,7 +298,29 @@ def clean_cif(oldfile, newfile):
 #
 def check_and_write_entry(entry, line, alllines, key, flag, linerange, newfile):
     """
-    check_and_write_entry
+    Checks if a specific entry is present in the current line of a CIF file and writes relevant lines to a new file.
+
+    Parameters:
+    -----------
+    entry : str
+        The specific CIF entry to look for in the line (e.g., '_entry.id').
+    line : str
+        The current line being read from the CIF file.
+    alllines : list
+        A list of all lines read so far from the CIF file.
+    key : str
+        The substring of the current line that is compared to the entry.
+    flag : int
+        A flag indicating whether the desired entry has been found (1 if found, 0 otherwise).
+    linerange : range
+        The range of lines from `alllines` to write to the new file if the entry is found.
+    newfile : str
+        The path to the new CIF file where the relevant lines will be written.
+
+    Returns:
+    -----------
+    flag : int
+        The new flag value indicating whether the entry was found or not.
     """
     if entry in key:
         flag = 1
