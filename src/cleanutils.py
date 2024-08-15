@@ -55,8 +55,7 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
 
 def simplify_cif(oldfile, newfile, pdbformat):
     """
-    Simplifies a CIF by creating a new version with less content and separates all biological assemblies in a CIF
-    file into their own separate files.
+    Separate all biological assemblies in a CIF into separate files.
 
     Parameters:
     -----------
