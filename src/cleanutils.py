@@ -12,16 +12,16 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
     projdir : str, optional
         The project directory containing source and target subdirectories. If none, the current directory is used.
     step : str, optional
-        The processing step to apply to each CIF file. If none, the current step is 'clean', which splits each cif file
-        into its biological assemblies
+        The processing step to apply to each CIF(s). If none, the current step is 'clean', which rewrites the CIF(s)
+        including only a limited set of data blocks.
     source : str, optional
-        The subdirectory within the project directory where the raw CIF files are in. The default is the
+        The subdirectory within the project directory where the raw CIF(s) are in. The default is the
         subdirectory titled 'raw_bank'
     target : str, optional
-        The subdirectory within the project directory where processed CIF files will be saved. The default is the
+        The subdirectory within the project directory where processed CIF(s) will be saved. The default is the
         subdirectory titled 'clean_bank'
     pdbformat : str, optional
-        The file extension format for CIF files. Thr default is '.cif'.
+        The file extension format for CIF(s). Thr default is '.cif'.
     verbose : bool, optional
         If True, progress is printed to the console. Default is true.
 
@@ -55,17 +55,18 @@ def process(projdir=None, step='clean', source='raw_bank', target='clean_bank', 
 
 def simplify_cif(oldfile, newfile, pdbformat):
     """
-    Simplifies a CIF file by creating a new version with less content that focuses on specific biological assemblies.
+    Simplifies a CIF by creating a new version with less content and separates all biological assemblies in a CIF
+    file into their own separate files.
 
     Parameters:
     -----------
     oldfile : str
-        Path to the original CIF file needed to be simplified.
+        Path to the original CIF(s) needed to be simplified.
     newfile: str
-        Path where the new, simplified CIF file(s) will be saved. The function creates multiple files if there are
+        Path where the new, simplified CIF(s) will be saved. The function creates multiple files if there are
         more than one biological assemblies.
     pdbformat : str
-        The file format extension used when saving the new CIF files.
+        The file format extension used when saving the new CIF.
 
     Returns:
     -----------
@@ -245,14 +246,14 @@ def simplify_cif(oldfile, newfile, pdbformat):
 #
 def clean_cif(oldfile, newfile):
     """
-    Cleans a CIF file by extracting and writing specific entries to a new file.
+    Rewrites CIF, including only a limited set of data blocks, by extracting and writing specific entries to a new file.
 
     Parameters:
     -----------
     oldfile : str
-        The path to the original CIF file needed to be cleaned.
+        The path to the original CIF(s) needed to be cleaned.
     newfile : str
-        The path where the cleaned CIF file will be written.
+        The path where the cleaned CIF(s) will be written.
 
     Returns:
     -----------
@@ -298,16 +299,16 @@ def clean_cif(oldfile, newfile):
 #
 def check_and_write_entry(entry, line, alllines, key, flag, linerange, newfile):
     """
-    Checks if a specific entry is present in the current line of a CIF file and writes relevant lines to a new file.
+    Checks if a specific entry is present in the current line of a CIF and writes relevant lines to a new file.
 
     Parameters:
     -----------
     entry : str
         The specific CIF entry to look for in the line (e.g., '_entry.id').
     line : str
-        The current line being read from the CIF file.
+        The current line being read from the CIF.
     alllines : list
-        A list of all lines read so far from the CIF file.
+        A list of all lines read so far from the CIF.
     key : str
         The substring of the current line that is compared to the entry.
     flag : int
@@ -315,7 +316,7 @@ def check_and_write_entry(entry, line, alllines, key, flag, linerange, newfile):
     linerange : range
         The range of lines from `alllines` to write to the new file if the entry is found.
     newfile : str
-        The path to the new CIF file where the relevant lines will be written.
+        The path to the new CIF where the relevant lines will be written.
 
     Returns:
     -----------
