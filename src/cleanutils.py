@@ -246,7 +246,7 @@ def simplify_cif(oldfile, newfile, pdbformat):
 #
 def clean_cif(oldfile, newfile):
     """
-    Rewrites CIF, including only a limited set of data blocks, by extracting and writing specific entries to a new file.
+    Rewrites CIF, including only a limited set of data blocks.
 
     Parameters:
     -----------
