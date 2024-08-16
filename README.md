@@ -81,6 +81,8 @@ Ensuring you have the pre-requisites will facilitate the installation process!
 
 >cd PDBClean-0.0.2
 
+>conda config --remove channels defaults
+
 >conda env create -f environment.yml
 
 2. Activate environment and install PDBClean
