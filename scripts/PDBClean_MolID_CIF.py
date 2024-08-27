@@ -79,9 +79,7 @@ while(input_menu != "QUIT"):
     elif (input_menu == "3"):
         molIDConversion_list = molidutils.add_user_conversion(molIDConversion_list)
     elif (input_menu == "4"):
-        testX=molIDConversion_list#FAPA
-        print(testX[0])
-        molIDConversion_list = molidutils.edit_conversion_interface(testX, action='add')#FAPA
+        molIDConversion_list = molidutils.edit_conversion_interface(molIDConversion_list, action='add')#FAPA
     elif (input_menu == "5"):
         molIDConversion_list = molidutils.edit_conversion_manual(molIDConversion_list)
     elif (input_menu == "6"):
@@ -104,8 +102,6 @@ while(input_menu != "QUIT"):
             elif (count_problems != 0):
                 concat_menu = "START"
             input_menu = "QUIT"
-            #concat_menu = "START" #FAPA
-            #final_menu = "START"
     input_menu_complete = molidutils.check_complete(molIDConversion_list)
 
 #########################################
@@ -136,9 +132,6 @@ if (final_menu == "START"):
 ########################################
 # INTERACTIVE MOLID CONCATENATION MENU #
 ########################################
-# Goal:
-
-
 
 
 if (concat_menu == "START"):
@@ -204,7 +197,6 @@ if (concat_menu == "START"):
         elif (concat_menu == "4"):
             unassigned_MolID=molidutils.return_unassigned_conversion(master_molID_class_list, step='concatenation')[0]
             print("This is the concatenation you need to accept:")
-            #print(unassigned_MolID)
             new_order=None
             master_molID_class_list = molidutils.list_accept_concatenations(master_molID_class_list, unassigned_MolID, new_order=new_order, action='accept')[0]
             # Note for tomorrow: here we need to create a new function in molidutils, so we can go over all concatenations!
