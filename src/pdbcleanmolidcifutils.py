@@ -652,7 +652,7 @@ def CreateMasterUniqueMolIDMapWithFileName(molID_class_list):
 def Print_MolID_To_Files_Map(MolID_to_files_map,target_dir,write_csv=True):
     """
     Prints a mapping of entity names (MolID) to a list of associated CIF(s) and
-    optionally writes the mapping to a CSV file.
+    writes the mapping to a CSV file if specified.
 
     Parameters:
     -----------
