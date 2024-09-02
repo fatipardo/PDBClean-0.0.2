@@ -27,7 +27,6 @@ def pdb_to_structurelists(filelist):
     pdb_to_structurelists
     """
     Structure_Sequences = []
-    Standard_Sequences = {}
     chid_list = []
     structid_list = []
     N = 0
@@ -92,7 +91,6 @@ def create_standard_seq_from_consensus(Structure_Sequences, Standard_Sequences, 
     create_standard_seq_from_consensus
     """
     input_submenu = ""
-    input_submenu_check_1 = ""
     while(input_submenu != "QUIT"):
         print("    Generate Standard Sequences based on all the input structures.",
               "    Type QUIT to return to the main menu.",
@@ -156,7 +154,6 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
     """
     ignore_chid = []
     input_submenu = ""
-    input_submenu_4_check_1 = ""
     while(input_submenu != "QUIT"):
         print("    Perform pairwise alignments against Standard Sequences. Type QUIT to return to the main menu.",
               "    1) Show list of structure chain IDs to ignore when pairwise aligning to the Standard Sequences",
@@ -178,69 +175,40 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
             input_submenu = input('File: ')
             if (os.path.isfile(input_submenu) == True):
                 with open(input_submenu) as my_file:
-                #my_file = open(input_submenu)
                     for line in my_file.readlines():
                         ignore_chid.append(line.strip())
             else:
                 print("File does not exist.")
         elif (input_submenu == "4"):
-            #ChainReassignmentMapping_List = []
-            #ChainReassignmentScores_List = []
-            ref_test_list_list={}
-            #test_list_list={} #so it gets renewed for each sequence
-            #print(Structure_Sequences)
             counter=0
 
-            #print('ALL STRUCTURE SEQUENCES')
-            #print(Structure_Sequences)
-
             for chid_seq_map in Structure_Sequences:
-                #print(filelist)
                 ChainReassignmentMapping_List = []
                 ChainReassignmentScores_List = []
 
                 filelist2=[]
-                #print(filelist)
                 filelist2.append(filelist[counter])
-                #print(filelist2)
 
                 print('I am starting to work on:')
-                #print(structid_list[Structure_Sequences.index(chid_seq_map)])
                 print(filelist2)
                 print("this is chid_seq_map and length")
                 print(chid_seq_map)
                 chid_seq_map_len = len(chid_seq_map)
                 print(chid_seq_map_len)
-                Struct_ChainReassignmentMap = {}
-                Struct_ChainReassignmentScores = {}
                 std_chid_list = []
-                chidlist_list = []
-                scorelist_list = []
                 test_list_list= {}
-                TESTchid_score_map = {} #FAPA
-                #print('This is Standard sequences:')
-                #print(Standard_Sequences)
                 for std_chid in Standard_Sequences:
                     if std_chid not in ignore_chid: # Standard_Sequences is the dictionary with the {chain IDs:sequences} from the reference structure
                         print("Now I am working on this chain:")
                         print(std_chid)
-
-                        #print("IGNORE IGNORE IGNORE:")
-                        #print(ignore_chid)
-
                         std_chid_list.append(std_chid)
 
                         structchid_score_map = {}
-                        # First, check to see if chid is already correctly assigned
-                    #    print(chid_seq_map)
                         if std_chid in chid_seq_map:
-                        #if std_chid not in ignore_chid: # FAPA
-                            #print("HERE IS TO SEE IF THIS IS IGNORED: "+std_chid)
                             aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[std_chid]])
                             score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
                             # If score is perfect, don't bother aligning all chains
-                            #if (score == 1):
-                            if (score >= 0.85): # No need to be so strict, think of possible cases when we would need identical score?
+                            if (score >= 0.85):
                                 structchid_score_map[std_chid] = score
                                 for struct_chid in chid_seq_map:
                                     if struct_chid not in ignore_chid:
@@ -257,7 +225,6 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
                         else:
                             for struct_chid in chid_seq_map:
                                 if struct_chid not in ignore_chid:
-                                #print(ignore_chid)
                                     aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
                                     score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
                                     structchid_score_map[struct_chid] = score
@@ -266,8 +233,6 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
                     #if std_chid not in ignore_chid: # we don't want to have any of the ignored chains 0_0
                         test_list_list[std_chid] = structchid_score_map
 
-                        #print("test_list_list:")
-                        #print(test_list_list)
                         print("Chains already completed:")
                         print(std_chid_list)
 
@@ -285,29 +250,15 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
                             test_list_list_T[tll_sub_key] = {}
                         test_list_list_T[tll_sub_key][tll_key] = test_list_list[tll_key][tll_sub_key]
 
-                #print("this is FAPA+HJ test jan 30th")
-                #print(test_list_list_T)
 
                 test_list_list_sortkey2 = {}
                 for tll_key in test_list_list.keys():
                     test_list_list_sortkey2[tll_key] = sorted(test_list_list[tll_key], key=lambda x:test_list_list[tll_key][x], reverse=True)
-                #print('test_list_list_sortkey2')
-                #print(test_list_list_sortkey2)
 
 
                 test_list_list_T_sortkey = {}
                 for tll_key in test_list_list_T.keys():
                     test_list_list_T_sortkey[tll_key] = sorted(test_list_list_T[tll_key], key=lambda x:test_list_list_T[tll_key][x], reverse=True)
-                #print('test_list_list_T_sortkey')
-                #print(test_list_list_T_sortkey)
-
-                #print("std_chid_list")
-                #print(len(std_chid_list))
-
-                #print(chid_seq_map_len)
-
-                #print("len test_list_list_sortkey2.keys")
-                #print(list(test_list_list_sortkey2.keys()))
 
                 ########
                 # The following section uses the matching python library to assign the chain IDs. We use the HospitalResident algorithm
@@ -332,7 +283,6 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
 
                 print('Just finished with this structure:')
                 print(filelist2)
-                #print(structid_list[Structure_Sequences.index(chid_seq_map)])
                 print('These are the results:')
                 print(output)
                 print(output_scores)
@@ -361,7 +311,6 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
 
                 counter+=1
 
-                input_menu_check_2 = "1"
                 input_submenu = "QUIT"
 
 
@@ -371,7 +320,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
     """
     ignore_chid = []
     input_submenu = ""
-    input_submenu_4_check_1 = ""
     while(input_submenu != "QUIT"):
         print("    Perform pairwise alignments against Standard Sequences. Type QUIT to return to the main menu.",
               "    1) Show list of structure chain IDs to ignore when pairwise aligning to the Standard Sequences",
@@ -395,7 +343,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
             input_submenu = input('File: ')
             if (os.path.isfile(input_submenu) == True):
                 with open(input_submenu) as my_file:
-                #my_file = open(input_submenu)
                     for line in my_file.readlines():
                         ignore_chid.append(line.strip())
             else:
@@ -454,8 +401,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                     print(Struct_ChainReassignmentMap)
                     print("This chidlist_list[i][0]:")
                     print(chidlist_list[i][0])
-                    #print("This is Struct_ChainReassignmentMap[chidlist_list[i][0]]:")
-                    #print(Struct_ChainReassignmentMap[chidlist_list[i][0]])
                     print("This is std_chid_list[i]:")
                     print(std_chid_list[i])
                     if chidlist_list[i][0] not in Struct_ChainReassignmentMap:
@@ -494,7 +439,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                         for old_chid in Struct_ChainReassignmentMap:
                             if (Struct_ChainReassignmentMap[old_chid] == chid):
                                 valid_chid = False #LIV
-                                #while (input_submenu != "PASS"):
                                 while valid_chid == False: #LIV
                                     print("Original chain " + str(old_chid) + " is being reassigned to new chain " + str(chid))
                                     print("This creates a conflict because original chain " + str(chid) + " has not been reassigned.")
@@ -504,7 +448,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                                     user_input_submenu = input('New chain ID: ') #FAPA
                                     if (user_input_submenu not in unused_chid) and (user_input_submenu not in Struct_ChainReassignmentMap.values()): #FAPA
                                         # input is a valid destination
-                                        #input_submenu = "PASS"
                                         valid_chid = True
                                     else:
                                         print("Not a valid destination chain ID")
@@ -577,8 +520,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                     print(Struct_ChainReassignmentMap)
                     print("This chidlist_list[i][0]:")
                     print(chidlist_list[i][0])
-                    #print("This is Struct_ChainReassignmentMap[chidlist_list[i][0]]:")
-                    #print(Struct_ChainReassignmentMap[chidlist_list[i][0]])
                     print("This is std_chid_list[i]:")
                     print(std_chid_list[i])
                     if chidlist_list[i][0] not in Struct_ChainReassignmentMap:
@@ -617,7 +558,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                         print("Conflict in structure " + structid_list[II])
                         for old_chid in Struct_ChainReassignmentMap:
                             if (Struct_ChainReassignmentMap[old_chid] == chid):
-                                #user_input_submenu = "Z" + str(counter)
                                 user_input_submenu = free_chid[counter]
                                 counter+=1
 
@@ -637,9 +577,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
         elif (input_submenu == "6"):
             ChainReassignmentMapping_List = []
             ChainReassignmentScores_List = []
-            ref_test_list_list={}
-            #test_list_list={} #so it gets renewed for each sequence
-            #print(Structure_Sequences)
             for chid_seq_map in Structure_Sequences:
                 print('I am starting to work on:')
                 print(structid_list[Structure_Sequences.index(chid_seq_map)])
@@ -647,15 +584,8 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                 print(chid_seq_map)
                 chid_seq_map_len=len(chid_seq_map)
                 print(chid_seq_map_len)
-                Struct_ChainReassignmentMap = {}
-                Struct_ChainReassignmentScores = {}
                 std_chid_list = []
-                chidlist_list = []
-                scorelist_list = []
                 test_list_list= {}
-                TESTchid_score_map = {} #FAPA
-                #print('This is Standard sequences:')
-                #print(Standard_Sequences)
                 for std_chid in Standard_Sequences:
                     if std_chid not in ignore_chid: # Standard_Sequences is the dictionary with the {chain IDs:sequences} from the reference structure
                         print("this is std_chid:")
@@ -668,14 +598,11 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
 
                         structchid_score_map = {}
                         # First, check to see if chid is already correctly assigned
-                    #    print(chid_seq_map)
                         if std_chid in chid_seq_map:
                         #if std_chid not in ignore_chid: # FAPA
-                            #print("HERE IS TO SEE IF THIS IS IGNORED: "+std_chid)
                             aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[std_chid]])
                             score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
                             # If score is perfect, don't bother aligning all chains
-                            #if (score == 1):
                             if (score >= 0.85): # No need to be so strict, think of possible cases when we would need identical score?
                                 structchid_score_map[std_chid] = score
                                 for struct_chid in chid_seq_map:
@@ -693,7 +620,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                         else:
                             for struct_chid in chid_seq_map:
                                 if struct_chid not in ignore_chid:
-                                #print(ignore_chid)
                                     aligned_seq = AlignSequences([Standard_Sequences[std_chid], chid_seq_map[struct_chid]])
                                     score = ScoreSequenceAlignment(aligned_seq[0], aligned_seq[1])
                                     structchid_score_map[struct_chid] = score
@@ -723,8 +649,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                             test_list_list_T[tll_sub_key] = {}
                         test_list_list_T[tll_sub_key][tll_key] = test_list_list[tll_key][tll_sub_key]
 
-                #print("this is FAPA+HJ test jan 30th")
-                #print(test_list_list_T)
 
                 test_list_list_sortkey2 = {}
                 for tll_key in test_list_list.keys():
@@ -761,7 +685,6 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
 
                 output = {}
                 for k in solved_game.keys():
-                        #print(str(k), str(testing[k]))
                     output[str(k)] = str(solved_game[k][0])
 
                 output_scores = {}
@@ -775,9 +698,7 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
                 print(output)
                 print(output_scores)
 
-                #ChainReassignmentMapping_List.append(Struct_ChainReassignmentMap)
                 ChainReassignmentMapping_List.append(output) # FAPA NEW SCORES
-                #ChainReassignmentScores_List.append(Struct_ChainReassignmentScores)
                 ChainReassignmentScores_List.append(output_scores) # FAPA NEW SCORES
                 input_menu_check_2 = "1"
                 input_submenu = "QUIT"
@@ -927,14 +848,9 @@ def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list
                 for line in myfile:
                     if (line[0:4] == "ATOM"):
                             # Chains outside map should not exist but just in case
-                        line_split = line.strip()
                         line_split = line.split()
-                            #print(I) #FAPA
-                            #print(ChainReassignmentMapping_List[I]) #FAPA
-                            #print(line_split[17]) #FAPA
                         if line_split[17] in ChainReassignmentMapping_List[I]:
                             newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n" #FAPA TEST
-                                #newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + line_split[8] + " " + line_split[9] + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + line_split[15] + " " + line_split[16] + " " + ChainReassignmentMapping_List[I][line_split[17]] + " " + line_split[18] + " " + line_split[19] + "\n"
                             newciffile.write(newline)
                         else:
                             newciffile.write(line)
