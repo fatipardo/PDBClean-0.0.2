@@ -3,6 +3,20 @@ import os
 #
 def remove_file_defined_chain_from_list(list):
     """
+    Removes specified chain IDs from list based on user's file input.
+
+    The user is prompted to enter the file name containing the chain IDs they want to remove.
+    The chain IDs in the file will be removed from the chain ID list.
+
+    Parameters:
+    -----------
+    list : list
+        Contains all the chain IDs from CIF(s)
+
+    Returns:
+    --------
+    list : list
+        Updated list without the chain ID from user's input
     """
     remove_chid = []
     print("    Enter the file name containing the list of chain IDs you want removed from Standard Sequences.")
@@ -18,6 +32,19 @@ def remove_file_defined_chain_from_list(list):
 
 def remove_user_defined_chain_from_list(list):
     """
+    Removes the chain ID from list based off of user's input of chain ID
+
+    The user is prompted to input the chain ID which they wish to remove
+
+    Parameter:
+    ----------
+    list : list
+        Contains all the chain IDs from CIF(s)
+
+    Returns:
+    --------
+    list : list
+        Updated list without the chain ID from user's input
     """
     remove_chid = []
     user_input  = ""
@@ -30,16 +57,37 @@ def remove_user_defined_chain_from_list(list):
 
 def remove_chid_from_list(list, remove_list):
     """
+    Removes the chain ID from the list
+
+    Parameters:
+    -----------
+    list : list
+        contains the chain IDs
+    remove_list : list
+        contains the chain IDs to be removed
+
+    Returns:
+    --------
+    list : list
+        Updated list without the chain ID from user's input
     """
     for elt in remove_list:
         if elt in list:
             list.remove(elt)
-#            del chlist[chid]
     return list
 
 def show_list(list):
     """
-    show_list
+    This function prints each item in a list.
+
+    Parameters:
+    -----------
+    list : list
+    	A list of items to be printed.
+
+    Returns:
+    --------
+    None
     """
     for elt in list:
         print(elt)
