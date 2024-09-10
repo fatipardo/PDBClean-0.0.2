@@ -9,6 +9,21 @@ import numpy as np
 # it also includes nucleic acids, including post-tranlational modifications,
 # which are mapped to ACTUG
 def ResnConvert(resn):
+    """
+    Converts the 3 letter amino acid id into a singular letter ID.
+
+    Parameters:
+    -----------
+    resn : str
+        The 3 letter amino acid id
+
+    Returns:
+    --------
+    ans : str
+        The one-letter ID representing the 3 letter amino acid ID. If there's none, "X" is
+        returned.
+
+    """
     AA = {}
     AA["UNK"] = "X"
     AA["ALA"] = "A"
@@ -66,7 +81,21 @@ def ResnConvert(resn):
 # END AA Map from 3 letter amino acid id to 1 letter id
 
 def AlignSequences(sequence_vec):
-    # Takes a list of sequence strings and performs a MUSCLE alignment, outputting a vector of aligned sequence strings
+    """
+    Takes a list of sequence strings and performs a MUSCLE alignment,
+    outputting a vector of aligned sequence strings
+
+    Parameters:
+    -----------
+    sequence_vec : list of str
+        list of sequences to be aligned
+
+    Returns:
+    --------
+    aligned_seq : list of str
+        A list containing the aligned sequences
+    """
+
     with open("Seq.fa", 'w') as newfafile:
         for seq in sequence_vec:
             newfafile.write("> Seq" + "\n")
@@ -106,11 +135,30 @@ def AlignSequences(sequence_vec):
 # END AlignSequences
 
 def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
+    """
+    Takes a list of sequence strings and performs a MUSCLE alignment, outputting
+    a vector of aligned sequence strings
+
+    Parameters:
+    -----------
+    sequence_vec : list of str
+        list of sequences to be aligned
+    file_name : str
+        Name given to FASTA file
+    this_chainsseq_list_ids : list of str
+        List of identifiers for each sequence which are also used as headers in the
+        FASTA file.
+
+    Returns:
+    --------
+    aligned_seq_map : dict
+        A dictionary where the keys are the sequence identifiers from `this_chainsseq_list_ids`
+        and the values are the corresponding aligned sequence strings.
+    """
     # Takes a list of sequence strings and performs a MUSCLE alignment, outputting a vector of aligned sequence strings
     with open(file_name+".fa", 'w') as newfafile:
         i = 0
         for seq in sequence_vec:
-            #newfafile.write("> Seq " + str(i)+ "\n")
             newfafile.write("> Seq " + str(this_chainsseq_list_ids[i]) + "\n")
             newfafile.write(seq + "\n")
             i += 1
@@ -129,8 +177,6 @@ def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
         time.sleep(10)
         print("waiting even more...")
 
-    #FAPA ENDS
-    #time.sleep(390)
     aligned_seq_map = {}
     aligned_seq = []
     seq = ""
@@ -152,8 +198,6 @@ def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
                 seq += line.strip()
         aligned_seq_map[key] = seq
 
-    #for i in range(len(aligned_seq_map)):
-    #    aligned_seq.append(aligned_seq_map[str(i)])
     for item in (aligned_seq_map.keys()):
         aligned_seq.append(aligned_seq_map[item])
 
@@ -165,14 +209,31 @@ def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
 # FAPA MAY TEST BEGIN
 
 def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
-    # Takes a list of sequence strings and performs a MUSCLE alignment, outputting a vector of aligned sequence strings
+    """
+    Takes a list of sequence strings and performs a MUSCLE alignment,
+    outputting a vector of aligned sequence strings
 
+    Parameters:
+    -----------
+    sequence_vec : list of str
+        list of sequences to be aligned
+    file_name : str
+        Name given to FASTA file
+    this_chainsseq_list_ids : list of str
+        List of identifiers for each sequence which are also used as headers in the
+        FASTA file.
+
+    Returns:
+    --------
+    aligned_seq_map : dict
+        A dictionary where the keys are sequence identifiers from `this_chainsseq_list_ids` and
+        the values are the corresponding aligned sequence strings.
+    """
     if os.path.exists(file_name+".fasta") == False:
 
         with open(file_name+".fa", 'w') as newfafile:
             i = 0
             for seq in sequence_vec:
-                #newfafile.write("> Seq " + str(i)+ "\n")
                 newfafile.write("> Seq " + str(this_chainsseq_list_ids[i]) + "\n")
                 newfafile.write(seq + "\n")
                 i += 1
@@ -181,7 +242,6 @@ def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
         process = os.popen(command)
         process
 
-        #FAPA START
         while not os.path.exists(file_name+".fasta"):
             time.sleep(10)
             print("waiting...")
@@ -189,9 +249,6 @@ def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
         while not os.path.getsize(file_name+".fasta") > 0:
             time.sleep(10)
             print("waiting even more...")
-
-        #FAPA ENDS
-        #time.sleep(390)
         process.close()
 
     else:
@@ -218,8 +275,6 @@ def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
                 seq += line.strip()
         aligned_seq_map[key] = seq
 
-    #for i in range(len(aligned_seq_map)):
-    #    aligned_seq.append(aligned_seq_map[str(i)])
     for item in (aligned_seq_map.keys()):
         aligned_seq.append(aligned_seq_map[item])
 
@@ -227,21 +282,37 @@ def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
     return (aligned_seq_map)
 
 
-
-# FAPA MAY TEST ENDS
-
-
 # FAPA JULY TEST STARTS HERE
 
 def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
-    # Takes a list of sequence strings and performs a MUSCLE alignment, outputting a vector of aligned sequence strings
+    """
+    Takes a list of sequence strings and performs a MUSCLE alignment, outputting
+    a vector of aligned sequence strings
 
+    Parameters:
+    -----------
+    sequence_vec : list of str
+        list containing sequences from FASTA files
+    file_name : str
+        Name given to FASTA file
+    this_chainsseq_list_ids : list of str
+        List of identifiers for each sequence which are also used as headers in the
+        FASTA file.
+
+    Returns:
+    --------
+    aligned_seq_map : dict
+        A dictionary where the keys are the sequence identifiers from `this_chainsseq_list_ids`
+        and the values are the corresponding aligned sequence strings
+    gap_percentages : np.ndarray
+        An array where each element represents the percentage of gaps at that position
+        across all sequences.
+    """
     if os.path.exists(file_name+".fasta") == False:
 
         with open(file_name+".fa", 'w') as newfafile:
             i = 0
             for seq in sequence_vec:
-                #newfafile.write("> Seq " + str(i)+ "\n")
                 newfafile.write("> Seq " + str(this_chainsseq_list_ids[i]) + "\n")
                 newfafile.write(seq + "\n")
                 i += 1
@@ -260,7 +331,6 @@ def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
             print("waiting even more...")
 
         #FAPA ENDS
-        #time.sleep(390)
         process.close()
 
     else:
@@ -287,8 +357,6 @@ def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
                 seq += line.strip()
         aligned_seq_map[key] = seq
 
-    #for i in range(len(aligned_seq_map)):
-    #    aligned_seq.append(aligned_seq_map[str(i)])
     for item in (aligned_seq_map.keys()):
         aligned_seq.append(aligned_seq_map[item])
 
@@ -304,12 +372,39 @@ def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
 
 # The functions below are used to calculate the percentage of gaps per position
 def read_fasta_files(fasta_file):
+    """
+    Reads FASTA files and extracts the sequences into a list
+
+    Parameters:
+    -----------
+    fasta_file : str
+        Path to FASTA file containing all the sequences
+
+    Returns:
+    --------
+    sequences : list of str
+        list of sequences from a FASTA file
+    """
     sequences = []
     for record in SeqIO.parse(fasta_file, "fasta"):
         sequences.append(str(record.seq))
     return sequences
 
 def calculate_gap_percentages(sequences):
+    """
+    Calculates the percentage of gaps at each position in a list of sequences.
+
+    Parameters:
+    -----------
+    sequences : list of str
+        list of sequences extracted from a FASTA file
+
+    Returns:
+    --------
+    gap_percentages : np.ndarray
+        An array where each element represents the percentage of gaps at that position
+        across all sequences.
+    """
     sequence_length = len(sequences[0])
     gap_counts = np.zeros(sequence_length)
 
@@ -325,6 +420,22 @@ def calculate_gap_percentages(sequences):
 # FAPA JULY TEST ENDS
 
 def ScoreSequenceAlignment(seq1, seq2):
+    """
+    Compares the reference sequence to another sequence and counts for similarity based on
+    exact matches between corresponding elements from the two sequences.
+
+    Parameters:
+    -----------
+    seq1 : str
+        The reference sequence
+    seq2 : str
+        The sequence being compared
+
+    Returns:
+    --------
+    score : float
+        The similarity score between the reference sequence and the sequence being compared.
+    """
     # Scores based on exact identity. Should  maybe be updated to take longer
     # of sequences so that it can be used with unaligned seq strings too
     score = 0
