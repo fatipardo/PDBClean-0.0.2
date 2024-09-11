@@ -7,7 +7,7 @@ import numpy as np
 
 # AA Map from 3 letter amino acid id to 1 letter id
 # it also includes nucleic acids, including post-tranlational modifications,
-# which are mapped to ACTUG
+# which are mapped to ACTUG.
 def ResnConvert(resn):
     """
     Converts the 3 letter amino acid id into a singular letter ID.
@@ -83,7 +83,7 @@ def ResnConvert(resn):
 def AlignSequences(sequence_vec):
     """
     Takes a list of sequence strings and performs a MUSCLE alignment,
-    outputting a vector of aligned sequence strings
+    outputting a vector of aligned sequence strings.
 
     Parameters:
     -----------
@@ -137,7 +137,7 @@ def AlignSequences(sequence_vec):
 def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
     """
     Takes a list of sequence strings and performs a MUSCLE alignment, outputting
-    a vector of aligned sequence strings
+    a vector of aligned sequence strings.
 
     Parameters:
     -----------
@@ -211,7 +211,9 @@ def AlignSequences_v2(sequence_vec, file_name, this_chainsseq_list_ids):
 def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
     """
     Takes a list of sequence strings and performs a MUSCLE alignment,
-    outputting a vector of aligned sequence strings
+    outputting a vector of aligned sequence strings. This version checks
+    if an alignment has already been provided, before running muscle, and
+    in that case, just reads the existing alignment.
 
     Parameters:
     -----------
@@ -287,7 +289,9 @@ def AlignSequences_v3(sequence_vec, file_name, this_chainsseq_list_ids):
 def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
     """
     Takes a list of sequence strings and performs a MUSCLE alignment, outputting
-    a vector of aligned sequence strings
+    a vector of aligned sequence strings. This version checks if an alignment has
+    already been provided, before running muscle, and in that case just reads the
+    existing alignment.
 
     Parameters:
     -----------
@@ -373,7 +377,7 @@ def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
 # The functions below are used to calculate the percentage of gaps per position
 def read_fasta_files(fasta_file):
     """
-    Reads FASTA files and extracts the sequences into a list
+    Reads FASTA files and extracts the sequences into a list.
 
     Parameters:
     -----------
