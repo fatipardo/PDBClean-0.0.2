@@ -24,7 +24,22 @@ import json
 
 def pdb_to_structurelists(filelist):
     """
-    pdb_to_structurelists
+    Iterates through a list CIF(s) and retrieves structure IDs, chain IDs, and maps chain IDs to their sequences.
+
+    Parameters:
+    ----------
+    filelist : str
+    	list of file paths for all '.cif' files in specified directory
+
+    Returns:
+    ------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their
+        sequences for each structure.
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    chid_list : list of str
+    	Contains all the chain IDs from CIF(s)
     """
     Structure_Sequences = []
     chid_list = []
@@ -56,7 +71,30 @@ def pdb_to_structurelists(filelist):
 
 def select_standard_seq_from_reference(Structure_Sequences, Standard_Sequences, structid_list, input_menu_check_1):
     """
-    select_standard_seq_from_reference
+    User interface for selecting and managing standard sequences from input structures.
+
+    Users can view a list of input structures, select a structure, remove chains from the
+    standard sequences, inspect chains, or return to the main menu.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their sequences for each structure.
+    Standard_Sequences : dict
+        Empty dictionary
+    structid_list : list of str
+        List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    input_menu_check_1 : str
+        Option chosen by user which opens the submenu
+
+    Returns:
+    --------
+    Standard_Sequences : dict
+        The updated dictionary of standard sequences where keys are chain IDs and values are
+        their corresponding sequences from the selected CIF. Updated dictionary reflects any
+        changes made through user interactions.
+    input_menu_check_1 : str
+        Updated string representing the state of the main menu, set to '1' to indicate a state change.
     """
     input_submenu = ""
     input_submenu_check_1 = ""
@@ -78,6 +116,7 @@ def select_standard_seq_from_reference(Structure_Sequences, Standard_Sequences, 
                                                                                                    structid_list,
                                                                                                    input_menu_check_1,
                                                                                                    input_submenu_check_1)
+
         elif (input_submenu == "3" and input_submenu_check_1 == "1"):
             Standard_Sequences = remove_chains_from_standard(Standard_Sequence)
         elif (input_submenu == "4" and input_submenu_check_1 == "1"):
@@ -88,7 +127,27 @@ def select_standard_seq_from_reference(Structure_Sequences, Standard_Sequences, 
 
 def create_standard_seq_from_consensus(Structure_Sequences, Standard_Sequences, chid_list, input_menu_check_1):
     """
-    create_standard_seq_from_consensus
+    User interface to manage the generation and update of standard sequences for a list of chain IDs
+    based on input structures.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their sequences for each structure.
+    Standard_Sequences : dict
+        Empty dictionary
+    chid_list : list of str
+       Contains all the chain IDs from CIF(s)
+    input_menu_check_1 : str
+        Option chosen by user which opens the submenu
+
+    Returns:
+    --------
+    Standard_Sequences : dict
+        A dictionary updated with the chain ID as the key and the sequence with the highest consensus
+        score as the value.
+    input_menu_check_1 : str
+        Updated string representing the state of the main menu, set to '1' to indicate a state change.
     """
     input_submenu = ""
     while(input_submenu != "QUIT"):
@@ -128,7 +187,24 @@ def create_standard_seq_from_consensus(Structure_Sequences, Standard_Sequences, 
 
 def review_standard_seq(Structure_Sequences, Standard_Sequences):
     """
-    review_standard_seq
+    User interface for reviewing and editing standard sequences.
+
+    Users can view chain IDs in the standard sequences, inspect or edit sequences for a
+    specific chain ID, and analyze the consensus of sequences for a given chain ID across
+    multiple structures
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their
+        sequences for each structure.
+    Standard_Sequences : dict
+        dictionary where each key is a chain ID and each value is the sequence associated
+        with that chain ID, reflecting updates made in previous menu options.
+
+    Returns:
+    --------
+    None
     """
     input_submenu = ""
     while(input_submenu != "QUIT"):
@@ -150,7 +226,30 @@ def review_standard_seq(Structure_Sequences, Standard_Sequences):
 
 def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, structid_list, filelist, target_dir):
     """
-    align_to_standard_seq and save new files to disk
+    User interface for performing pairwise alignments of sequences in input structures against standard sequences
+    and saves the results.
+
+    Allows users to ignore specific chain IDs during alignment. It manages alignment results, renaming chains if
+    necessary, and saving new files to disk.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their
+        sequences for each structure.
+    Standard_Sequences : dict
+        Dictionary where each key is a chain ID and each value is the sequence associated
+        with that chain ID, reflecting updates made in previous menu options.
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    filelist : str
+    	list of file paths for all '.cif' files in specified directory
+    target_dir : str
+        Directory where the new files will be saved
+
+    Returns:
+    --------
+    None
     """
     ignore_chid = []
     input_submenu = ""
@@ -313,10 +412,30 @@ def align_to_std_seq_and_save_to_disk(Structure_Sequences, Standard_Sequences, s
 
                 input_submenu = "QUIT"
 
-
+ # Not called anywhere
 def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list):
     """
-    align_to_standard_seq
+    User interface for performing pairwise alignments against Standard Sequences.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their
+        sequences for each structure.
+    Standard_Sequences : dict
+        dictionary where each key is a chain ID and each value is the sequence associated
+        with that chain ID, reflecting updates made in previous menu options.
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+
+    Returns:
+    --------
+    ChainReassignmentMapping_List : list of dict
+        A list of dictionaries where each dictionary maps original chain IDs to reassigned chain IDs.
+    ChainReassignmentScores_List : list of dict
+        A list of dictionaries where each dictionary contains scores for the chain reassignment mapping.
+    input_menu_check_2 : str
+        Status indicator for menu navigation, typically set to "1" to continue.
     """
     ignore_chid = []
     input_submenu = ""
@@ -711,6 +830,22 @@ def align_to_standard_seq(Structure_Sequences, Standard_Sequences, structid_list
 
 def assign_standard_from_consensus(Structure_Sequences, Standard_Sequences, chid):
     """
+    Determine the standard sequence for a given chain ID based on consensus across multiple structures.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their sequences for each structure.
+    Standard_Sequences : dict
+        Empty dictionary
+    chid : str
+        Chain ID from list containing all chain IDs across CIF(s)
+
+    Returns:
+    --------
+    Standard_Sequences : dict
+        A dictionary updated with the chain ID as the key and the sequence with the highest consensus
+        score as the value.
     """
     this_chainsseq_list, this_chainsseq_score = get_this_chainsseq_list(Structure_Sequences, chid)
     # Now you have an ordered by length list of sequences pertaining to particular chID_list
@@ -728,6 +863,24 @@ def assign_standard_from_consensus(Structure_Sequences, Standard_Sequences, chid
 
 def get_this_chainsseq_list(Structure_Sequences, chid, verbose=True):
     """
+    Extract and analyze sequences associated with a specific chain ID from 'Structure_Sequences'.
+
+    Parameters:
+    -----------
+    Structure_Sequences : list of dict
+        Contains dictionaries where each dictionary maps chain IDs to their sequences for each structure.
+    chid : str
+        Chain ID from list containing all chain IDs across CIF(s)
+    verbose : Bool, optional
+        If True, prints additional information about the sequences and their counts. Default is True.
+    Returns:
+    --------
+    this_chainsseq_list : list of str
+        A list of sequences associated with the specified chain ID, sorted in descending order
+        by sequence length.
+    this_chainsseq_score : dict
+        A dictionary where sequences are mapped with their counts across the structures,
+        adjusted to include counts from shorter sequences that are part of longer ones.
     """
     this_chainsseq_list = []
     # Here, we're going through each structure in Structure_Sequences, which holds chid to seq maps
@@ -770,7 +923,18 @@ def get_this_chainsseq_list(Structure_Sequences, chid, verbose=True):
 
 def inspect_chains_in_standard(Standard_Sequences):
     """
-    inspect_chains_in_standard
+    Interactive user interface which allows user to inspect the chain IDs in the standard sequences
+
+    Parameters:
+    -----------
+    Standard_Sequences : dict
+        A dictionary where keys are chain IDs and values are their corresponding sequences
+        for the selected CIF file. The dictionary is retrieved based on the user's input for
+        the CIF file name.
+
+    Returns:
+    --------
+    None
     """
     input_submenu = ""
     while(input_submenu != "QUIT"):
@@ -791,7 +955,20 @@ def inspect_chains_in_standard(Standard_Sequences):
 
 def remove_chains_from_standard(Standard_Sequences):
     """
-    remove_chains_from_standard
+    Interactive user interface for removing chain IDs from the standard sequences.
+
+    Parameters:
+    -----------
+    Standard_Sequences : dict
+        A dictionary where keys are chain IDs and values are their corresponding sequences
+        for the selected CIF file. The dictionary is retrieved based on the user's input for
+        the CIF file name.
+
+    Returns:
+    --------
+    Standard_Sequences : dict
+        Updated dictionary where the specified chain ID(s) has been removed from the
+        dictionary.
     """
     input_submenu = ""
     while(input_submenu != "QUIT"):
@@ -808,10 +985,33 @@ def remove_chains_from_standard(Standard_Sequences):
         elif (input_submenu== "3"):
             Standard_Sequences = remove_file_defined_chain_from_list(Standard_Sequences)
     return Standard_Sequences
+#Dictionary of the structure ID which contains the chain ID and its associated sequence.
 
 def select_input_structure(Structure_Sequences, structid_list, input_menu_check_1, input_submenu_1_check_1):
     """
-    select_input_structure
+    Prompts user to enter name of CIF in format 'input directory/CIF' and selects the corresponding
+    structure data.
+
+    Parameters:
+    ----------
+    Structure_Sequences : dict
+    	Contains dictionaries where each dictionary maps chain IDs to their sequences for each structure.
+    structid_list : list of str
+        List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    input_menu_check_1 : str
+    	Tracks the current state of the main menu.
+    input_submenu_1_check_1 : str
+    	Tracks the current state of the submenu. It determines whether to show additional menu options or not.
+
+    Returns:
+    --------
+    Standard_Sequences : dict
+        A dictionary where keys are chain IDs and values are their corresponding sequences for the selected CIF file.
+        The dictionary is retrieved based on the user's input for the CIF.
+    input_menu_check_1 : str
+    	Updated string representing the state of the main menu, set to '1' to indicate a state change.
+    input_submenu_1_check_1 : str
+    	Updated string representing the state of the submenu, set to '1' to indicate a state change.
     """
     input_submenu = ""
     while(input_submenu != "QUIT"):
@@ -832,7 +1032,23 @@ def select_input_structure(Structure_Sequences, structid_list, input_menu_check_
 
 def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list, target_dir=None):
     """
-    reassignmedmaps_to_pdb
+    Reassigns chain IDs in CIF files based on a provided mapping and writes the modified files to a
+    target directory.
+
+    Parameters:
+    -----------
+    filelist : str
+        list of file paths for all '.cif' files in specified directory
+    ChainReassignmentMapping_List : list of dict
+        A list of dictionaries where each dictionary maps original chain IDs to reassigned chain IDs.
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    target_dir : str, optional
+        Directory where the new files will be saved
+
+    Returns:
+    --------
+    None
     """
     print("structid_list")
     print(structid_list)
@@ -859,7 +1075,23 @@ def reassignedmaps_to_pdb(filelist, ChainReassignmentMapping_List, structid_list
 
 def reassignedmaps_to_log(ChainReassignmentMapping_List, ChainReassignmentScores_List, structid_list, target_dir=None, verbose=True):
     """
-    reassignedmaps_to_log
+    Logs chain reassignment information to a file and optionally prints a summary to the console.
+
+    Parameters:
+    -----------
+    ChainReassignmentMapping_List : list of dict
+        A list of dictionaries where each dictionary maps original chain IDs to reassigned chain IDs.
+    ChainReassignmentScores_List : list of dict
+        A list of dictionaries where each dictionary contains scores for the chain reassignment mapping.
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    target_dir : str, optional
+        Directory where the new files will be saved
+    verbose : bool, optional
+        If True, prints a summary of the chain reassignments and their scores to the console. Default is True.
+    Returns:
+    --------
+    None
     """
     logfilename=target_dir+'/ChainStandardizationRecord.txt'
     with open(logfilename, 'a') as recordfile:
@@ -874,4 +1106,3 @@ def reassignedmaps_to_log(ChainReassignmentMapping_List, ChainReassignmentScores
             print(structid_list[i])
             for oldchid in ChainReassignmentMap:
                 print(oldchid + " " + ChainReassignmentMap[oldchid] + " " + str(ChainReassignmentScore[oldchid]))
-#
