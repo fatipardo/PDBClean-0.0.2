@@ -118,7 +118,7 @@ def select_standard_seq_from_reference(Structure_Sequences, Standard_Sequences, 
                                                                                                    input_submenu_check_1)
 
         elif (input_submenu == "3" and input_submenu_check_1 == "1"):
-            Standard_Sequences = remove_chains_from_standard(Standard_Sequence)
+            Standard_Sequences = remove_chains_from_standard(Standard_Sequences)
         elif (input_submenu == "4" and input_submenu_check_1 == "1"):
             inspect_chains_in_standard(Standard_Sequences)
         elif (input_submenu == "5" and input_submenu_check_1 == "1"):
