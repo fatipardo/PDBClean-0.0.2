@@ -11,7 +11,24 @@ from PDBClean.listutils import *
 
 def pdb_to_structurelists(filelist):
     """
-    pdb_to_structurelists
+    Iterates through a list CIF(s) and retrieves structure IDs, chain IDs, and maps chain IDs to their sequences,
+    and maps chain IDs to their residue numbers.
+
+    Parameters:
+    -----------
+    filelist : list of str
+    	list of file paths for all '.cif' files in specified directory
+
+    Returns:
+    --------
+    Structure_Sequences : dict
+        Contains dictionary where chain ID is mapped to their sequence for each structure.
+    ChID_ResiNum_Vector : list of dict
+        Each dictionary maps the chain ID to their residue numbers for a structure
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    chid_list : list of str
+    	A list containing all the chain IDs from CIF(s)
     """
     # Structure_Sequences is the master list of maps from chain IDs to their sequences
     Structure_Sequences = {}
@@ -25,11 +42,11 @@ def pdb_to_structurelists(filelist):
         print("Reading:" + ' ' + my_file + "  (" + str(N) + " of " + str(len(filelist)) + ")")
         struct = FastMMCIFParser(QUIET=1).get_structure(str(my_file), my_file)
         structid_list.append(struct.get_id())
-        chid_seq_map = {}
         chid_resinum_map = {}
         # Only written for structures with only one model in them
         for chain in struct[0]:
             if (chain.get_id() not in chid_resinum_map):
+                #Every chain ID you put inside its own list in the dictionary
                 chid_resinum_map[chain.get_id()] = []
             key = str(struct.get_id()) + "_" + str(chain.get_id())
             resinum_list = []
@@ -52,7 +69,33 @@ def pdb_to_structurelists(filelist):
 
 def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structid_list, chid_list, check):
     """
-    perform_multiple_alignment
+    Interactive user interface for performing multiple alignments
+
+    Parameters:
+    -----------
+    Structure_Sequences : dict
+        Contains dictionary where chain ID is mapped to their sequence for each structure.
+    ChID_ResiNum_Vector : list of dict
+        Each dictionary maps the chain ID to their residue numbers for a structure
+    structid_list : list of str
+    	List of unique structure identifiers for each CIF. Format is 'input directory / CIF'
+    chid_list : list of str
+    	A list containing all the chain IDs from CIF(s)
+    check : str
+        Option chosen by user which opens the submenu
+
+    Returns:
+    --------
+    Structure_Sequences_Aligned : dict
+        A dictionary where each key is a combination of structure identifier and chain ID,
+        and the value is the aligned sequence for that chain.
+    Structure_ConversionTemplate : dict
+        A dictionary mapping each structure identifier to a conversion template,
+        which contains mappings of residue numbers from the original sequence to the aligned sequence.
+    chid_list : list of str
+        Updated list of chain IDs where some may have been removed based on the user's options
+    check : str
+        Updated string representing the state of the main menu, set to '1' to indicate a state change.
     """
     Structure_Sequences_Aligned = {}
     Structure_ConversionTemplate = {}
@@ -75,18 +118,16 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
             for chid in chid_list:
                 this_chainsseq_list = []
                 this_chainsseq_list_ids = [] #FAPA
-                this_chainsseq_aligned_list = []
                 for I in range(len(structid_list)):
                     key = str(structid_list[I]) + "_" + chid
                     if key in Structure_Sequences:
                         this_chainsseq_list.append(Structure_Sequences[key])
                         this_chainsseq_list_ids.append(structid_list[I]) # FAPA
-                this_chainsseq_aligned_list_map = AlignSequences_v2(this_chainsseq_list, chid,this_chainsseq_list_ids )
+                this_chainsseq_aligned_list_map = AlignSequences_v2(this_chainsseq_list, chid,this_chainsseq_list_ids)
                 i = 0
                 for I in range(len(structid_list)):
                     key = str(structid_list[I]) + "_" + chid
                     if key in Structure_Sequences:
-                        #Structure_Sequences_Aligned[key] = this_chainsseq_aligned_list[i]
                         Structure_Sequences_Aligned[key] = this_chainsseq_aligned_list_map[str(structid_list[I])]
                         i += 1
             for I in range(len(structid_list)):
@@ -113,7 +154,17 @@ def perform_multiple_alignment(Structure_Sequences, ChID_ResiNum_Vector, structi
 
 def show_conversiontemplate(Structure_ConversionTemplate):
     """
-    show_conversion_template
+    Prints the conversion template to screen
+
+    Paramters:
+    ----------
+    Structure_ConversionTemplate : dict
+        A dictionary mapping each structure identifier to a conversion template,
+        which contains mappings of residue numbers from the original sequence to the aligned sequence.
+
+    Returns:
+    --------
+    None
     """
 
     for structid in Structure_ConversionTemplate:
@@ -124,7 +175,23 @@ def show_conversiontemplate(Structure_ConversionTemplate):
 ## FAPA
 def write_and_show_conversiontemplate(Structure_ConversionTemplate, target_dir, write_csv=True):
     """
-    show_conversion_template
+    Writes and displays a mapping of old residue IDs to new residue IDs for each structure.
+
+    This function prints the mapping to the console and optionally writes it to a CSV file
+    in the specified target directory.
+
+    Parameters:
+    -----------
+    Structure_ConversionTemplate : dict
+    	list of file paths for all '.cif' files in specified directory
+    target_dir : str
+        Directory where the new files will be saved
+    write_csv : bool, optional
+        Writes the mapping to a CSV file named 'OldResID_NewResID_Map.csv' if True. Default is 'True'.
+
+    Returns:
+    --------
+    None
     """
 
     if write_csv:
@@ -136,7 +203,6 @@ def write_and_show_conversiontemplate(Structure_ConversionTemplate, target_dir, 
         print(structid)
         for key in Structure_ConversionTemplate[structid]:
             print(key + ":" + str(Structure_ConversionTemplate[structid][key]))
-            #structid_for_print=[x.split("/")[-1] for x in structid]
             structid_for_print = structid.split("/")[-1]
             if write_csv:
                 with open(f'{target_dir}/OldResID_NewResID_Map.csv', 'a') as fout:
@@ -150,7 +216,21 @@ def write_and_show_conversiontemplate(Structure_ConversionTemplate, target_dir, 
 
 def conversiontemplate_to_pdb(filelist, Structure_ConversionTemplate, target_dir=None):
     """
-    conversiontemplate_to_pdb
+    Saves the conversion template into re-written CIF(s) which are placed into the target directory
+
+    Parameters:
+    -----------
+    filelist : str
+    	list of file paths for all '.cif' files in specified directory
+     Structure_ConversionTemplate : dict
+        A dictionary mapping each structure identifier to a conversion template,
+        which contains mappings of residue numbers from the original sequence to the aligned sequence.
+    target_dir : str, optional
+        Directory where the new files will be saved. If none, no files will be saved.
+
+    Returns:
+    --------
+    None
     """
     for my_files in filelist:
         newciffilename=target_dir+'/'+my_files.split('/')[-1]
@@ -161,7 +241,6 @@ def conversiontemplate_to_pdb(filelist, Structure_ConversionTemplate, target_dir
                 for line in myfile:
                     if (line[0:4] == "ATOM") or (line[0:6] == "HETATM"):
                         # Chains outside map should not exist but just in case
-                        line_split = line.strip()
                         line_split = line.split()
                         key = line_split[17] + "_" + str(line_split[15])
                         if key in conversion_template:
