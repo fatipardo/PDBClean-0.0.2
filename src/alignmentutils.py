@@ -369,7 +369,8 @@ def AlignSequences_v4(sequence_vec, file_name, this_chainsseq_list_ids):
     sequences = read_fasta_files( file_name + ".fasta")
     gap_percentages = calculate_gap_percentages(sequences)
 
-    print(aligned_seq_map)
+    #print(aligned_seq_map)
+    print("Gap percentages per position:")
     print(gap_percentages)
 
     return (aligned_seq_map,gap_percentages)
