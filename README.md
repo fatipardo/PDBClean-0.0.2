@@ -72,6 +72,8 @@ Ensuring you have the pre-requisites will facilitate the installation process!
 - Anaconda
 - Create SSH Key and link it to your GitHub account
 - Jupyter notebook
+- If running in a Mac with M1/M2/M3 chips, install Muscle v.5.1.0 with homebrew, using the following command:
+ > `brew install brewsci/bio/muscle`
 
 ### Installation steps
 
@@ -83,7 +85,13 @@ Ensuring you have the pre-requisites will facilitate the installation process!
 
 >conda config --remove channels defaults
 
+If you are installing in a computer with Intel chip, use the following command:
+
 >conda env create -f environment.yml
+
+If you are installing in a computer with M1/M2/M3 chip, use the following command instead:
+
+>conda env create -f environment_M1.yml
 
 2. Activate environment and install PDBClean
 
