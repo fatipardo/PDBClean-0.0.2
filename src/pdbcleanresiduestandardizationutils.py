@@ -390,7 +390,7 @@ def conversiontemplate_to_pdb_FAPA(filelist, Structure_ConversionTemplate, targe
             with open(newciffilename, 'w') as newciffile:
                 # Now figure out which file is which template
                 conversion_template = Structure_ConversionTemplate[myfile.name]
-                #print(conversion_template)
+                print(conversion_template)
 
 
                 for line in myfile:
@@ -400,7 +400,8 @@ def conversiontemplate_to_pdb_FAPA(filelist, Structure_ConversionTemplate, targe
                         # Chains outside map should not exist but just in case
                         #line_split = line.strip()
                         line_split = line.split()
-                        new_line_resnum=int(line_split[8])
+                        #print(line_split[8])
+                        #new_line_resnum=int(line_split[8])
 
                         #if new_line_resnum == start_line_resnum:
 
@@ -419,6 +420,8 @@ def conversiontemplate_to_pdb_FAPA(filelist, Structure_ConversionTemplate, targe
                         #key = line_split[6] + "_" + str(resnum)  # FAPA: WE WANT CHAINID_RESID TO BE THE KEY
 
                         #print(len(line_split))
+
+
 
                         if key in conversion_template:
                             #print(key, conversion_template[key])
@@ -443,10 +446,40 @@ def conversiontemplate_to_pdb_FAPA(filelist, Structure_ConversionTemplate, targe
                                               line_split[16] + " " + line_split[17] + " " + "\n"
                                     newciffile.write(newline)
                             else:
-                                newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + line_split[7] + " " + str(conversion_template[key]) + " " + "?" + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + " " + line_split[14] + " " + str(conversion_template[key]) + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n"
-                                newciffile.write(newline)
+                                if len(str(conversion_template[key]).split()) < 2:
+                                    #print(conversion_template[key])
+                                    newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + line_split[6] + " " + \
+                                              line_split[7] + " " + str(conversion_template[key]) + " " + "?" + " " + line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + line_split[13] + \
+                                              " " + line_split[14] + " " + str(conversion_template[key]) + " " + line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n"
+                                    newciffile.write(newline)
+                                else:
+                                    newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + \
+                                              line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + \
+                                              line_split[6] + " " + \
+                                              line_split[7] + " " + str(conversion_template[key].split()[0]) + " " + \
+                                              str(conversion_template[key].split()[1]) + " " + \
+                                              line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + \
+                                              line_split[13] + \
+                                              " " + line_split[14] + " " + str(conversion_template[key].split()[0]) + " " + \
+                                              line_split[16] + " " + line_split[17] + " " + line_split[18] + " " + line_split[19] + "\n"
+                                    newciffile.write(newline)
                         else:
-                            newciffile.write(line)
+                            if len(line_split) == 18:
+                                newciffile.write(line)
+                            else:
+                                if line_split[8] == ".":
+                                    newline = line_split[0] + " " + line_split[1] + " " + line_split[2] + " " + \
+                                              line_split[3] + " " + line_split[4] + " " + line_split[5] + " " + \
+                                              line_split[6] + " " + \
+                                              line_split[7] + " " + line_split[15] + " " + \
+                                              line_split[9] + " " + \
+                                              line_split[10] + " " + line_split[11] + " " + line_split[12] + " " + \
+                                              line_split[13] + \
+                                              " " + line_split[14] + " " + line_split[15] + " " + \
+                                              line_split[16] + " " + line_split[17] + " " + line_split[18] + " "+ line_split[19] +"\n"
+                                    newciffile.write(newline)
+                                else:
+                                    newciffile.write(line)
                     else:
                         newciffile.write(line)
 
