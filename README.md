@@ -118,5 +118,5 @@ If you are installing in a computer with M1/M2/M3 chip, use the following comman
 
 The code in this repository is based on the code found [here](https://test.pypi.org/project/PDBClean/#files).
 The code was originally written by Frédéric Poitevin and Nicholas Corsepius.
-Fátima Pardo Avila and Liv Weiner created this repository.
+Fátima Pardo Avila and Liv Weiner created this repository. Paulina Cabral contributed to the code and documentation.
 We all worked on this project while being part of the Levitt Lab at Stanford University.
