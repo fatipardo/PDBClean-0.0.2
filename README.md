@@ -79,9 +79,9 @@ Ensuring you have the pre-requisites will facilitate the installation process!
 
 1. Download PDBClean from GitHub and install environment from YML file
 
->git clone git@github.com:fatipardo/PDBClean-0.0.2.git
+>git clone git@github.com:fatipardo/PDBCleanV2
 
->cd PDBClean-0.0.2
+>cd PDBCleanV2
 
 >conda config --remove channels defaults
 
