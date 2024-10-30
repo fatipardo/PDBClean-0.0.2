@@ -390,7 +390,7 @@ def conversiontemplate_to_pdb_FAPA(filelist, Structure_ConversionTemplate, targe
             with open(newciffilename, 'w') as newciffile:
                 # Now figure out which file is which template
                 conversion_template = Structure_ConversionTemplate[myfile.name]
-                print(conversion_template)
+                #print(conversion_template)
 
 
                 for line in myfile:
